@@ -3,6 +3,7 @@ package io.mindspice.mspice.core;
 import io.mindspice.mspice.enums.ActionType;
 import io.mindspice.mspice.enums.InputAction;
 import io.mindspice.mspice.input.KeyListener;
+import org.joml.Matrix4f;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
@@ -25,6 +26,13 @@ public class GameWindow {
     private GameInput input;
     private int[] winPosX = new int[1];
     private int[] winPosY = new int[1];
+    float fov = (float) Math.toRadians(90);
+    float zNear = 1f;
+    float zFar = 1000f;
+
+    float aspectRatio;
+
+    Matrix4f projectionMatrix;
 
     private KeyListener keyListener = new KeyListener(new ActionType[]{ActionType.SCREEN}, 100);
     private IntConsumer[] keyConsumers = new IntConsumer[InputAction.values().length];
@@ -35,7 +43,9 @@ public class GameWindow {
 
         this.width = size[0];
         this.height = size[1];
-        windowHandle = glfwCreateWindow(width, height, "", NULL, NULL);
+        aspectRatio = (float) width / height;
+        windowHandle = glfwCreateWindow(width, height, title, MemoryUtil.NULL, MemoryUtil.NULL);
+        projectionMatrix = new Matrix4f();
 
         if (windowHandle == NULL) { throw new RuntimeException("Failed to create the GLFW window"); }
         GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -46,10 +56,13 @@ public class GameWindow {
         glfwSetWindowPos(windowHandle, winPosX[0], winPosY[0]);
 
         setCallBacks();
-
         GLFW.glfwMakeContextCurrent(windowHandle);
         GL.createCapabilities();
         GL11.glEnable(GL_DEPTH_TEST);
+        GL11.glEnable(GL_STENCIL_TEST);
+        GL11.glEnable(GL_CULL_FACE);
+        GL11.glEnable(GL_BACK);
+
         GL11.glViewport(0, 0, width, height);
         int[] fbWidth = new int[1];
         int[] fbeHeight = new int[1];
@@ -103,15 +116,18 @@ public class GameWindow {
         }
     }
 
+    public void setFOV(double fov) {
+        this.fov = (float) Math.toRadians(fov);
+    }
+
     public void update() {
         consumeKeyEvent();
-        GL11.glClearColor(0.5f, 0.7f, 0f, 1.0f);
+        GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         glfwSwapBuffers(windowHandle);
     }
 
-
-    private void consumeKeyEvent(){
+    private void consumeKeyEvent() {
         keyListener.getQueue().consumeAll(keyConsumers);
     }
 
@@ -128,6 +144,19 @@ public class GameWindow {
         if (errorCB != null) { errorCB.free(); }
         GLFWWindowSizeCallback windowCB = glfwSetWindowSizeCallback(windowHandle, null);
         if (windowCB != null) { windowCB.free(); }
+    }
+
+    public Matrix4f getProjectionMatrix() {
+        return projectionMatrix;
+    }
+
+    public Matrix4f updateProjectionMatrix() {
+        return projectionMatrix.setPerspective(fov, aspectRatio, zNear, zFar);
+    }
+
+    public Matrix4f updateProjectionMatrix(Matrix4f matrix, int width, int height) {
+        float aspect = (float) width / height;
+        return projectionMatrix.setPerspective(fov, aspect, zNear, zFar);
     }
 
     public int getHeight() {
@@ -158,10 +187,8 @@ public class GameWindow {
         if (action != GLFW_RELEASE) { return; }
         glfwGetWindowPos(windowHandle, winPosX, winPosY);
 
-        if (glfwGetWindowMonitor(windowHandle) == NULL) {
-            glfwSetWindowMonitor( // Dont Care arg is for refresh rate
-                                  windowHandle, glfwGetPrimaryMonitor(), 0, 0, width, height, GLFW_DONT_CARE
-            );
+        if (glfwGetWindowMonitor(windowHandle) == NULL) { // Dont Care arg is for refresh rate
+            glfwSetWindowMonitor(windowHandle, glfwGetPrimaryMonitor(), 0, 0, width, height, GLFW_DONT_CARE);
         } else {
             glfwSetWindowMonitor(
                     windowHandle, NULL, winPosX[0], winPosY[0], width, height, GLFW_DONT_CARE
@@ -182,4 +209,6 @@ public class GameWindow {
         public boolean compatibleProfile;
         public int[] windowSize;
     }
+
+
 }
