@@ -5,6 +5,7 @@ package io.mindspice.mspice.util.collections;
 import io.mindspice.mspice.enums.InputAction;
 import io.mindspice.mspice.util.consumers.KeyActionConsumer;
 
+import java.util.Arrays;
 import java.util.function.IntConsumer;
 
 
@@ -91,5 +92,9 @@ public class CircularKeyQueue {
         if (!isEmpty()) {
             consumer.accept(inputActions[head], keyStates[head]);
         }
+    }
+
+    public String toString() {
+        return Arrays.toString(inputActions);
     }
 }

@@ -1,4 +1,4 @@
-package io.mindspice.mspice.core;
+package io.mindspice.mspice.core.game;
 
 import io.mindspice.mspice.enums.ActionType;
 import io.mindspice.mspice.enums.InputAction;
@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
+import java.util.Arrays;
 import java.util.function.IntConsumer;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -122,8 +123,6 @@ public class GameWindow {
 
     public void update() {
         consumeKeyEvent();
-        GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         glfwSwapBuffers(windowHandle);
     }
 
@@ -157,6 +156,10 @@ public class GameWindow {
     public Matrix4f updateProjectionMatrix(Matrix4f matrix, int width, int height) {
         float aspect = (float) width / height;
         return projectionMatrix.setPerspective(fov, aspect, zNear, zFar);
+    }
+
+    public boolean isKeyPressed(int keyCode) {
+        return glfwGetKey(windowHandle, keyCode) == GLFW_PRESS;
     }
 
     public int getHeight() {

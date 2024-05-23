@@ -39,7 +39,7 @@ public class KeyEventManager {
         size--;
     }
 
-    private void sort() {
+    private void sort() { // TODO maybe just swap last and null?
         // only needs to sort one null to the end, most efficient way to do it
         for (int i = 0; i < keyListeners.length; i++) {
             if (keyListeners[i] == null) {

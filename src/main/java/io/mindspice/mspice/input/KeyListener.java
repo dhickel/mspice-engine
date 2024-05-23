@@ -5,6 +5,9 @@ import io.mindspice.mspice.enums.InputAction;
 import io.mindspice.mspice.util.collections.CircularKeyQueue;
 import io.mindspice.mspice.util.consumers.KeyActionConsumer;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 
 public class KeyListener {
     private boolean isListening = true;

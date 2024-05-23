@@ -1,4 +1,4 @@
-package io.mindspice.mspice.core;
+package io.mindspice.mspice.core.game;
 
 import io.mindspice.mspice.input.KeyEventManager;
 import io.mindspice.mspice.input.KeyListener;
@@ -6,11 +6,10 @@ import io.mindspice.mspice.input.MousePosEventManager;
 import io.mindspice.mspice.input.MousePosListener;
 import org.lwjgl.glfw.*;
 
+import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
+
 
 public class GameInput {
-    //    private final CircularBiIntQueue keyInputQueue = new CircularBiIntQueue(100);
-//    private final CircularBiIntQueue mouseInputQueue = new CircularBiIntQueue(100);
-//    private final CircularIntDblQueue scrollInputQueue = new CircularIntDblQueue(100);
     private final double[] mousePos = new double[2];
     private final KeyEventManager keyboardEvents = new KeyEventManager(10);
     private final KeyEventManager mouseEvents = new KeyEventManager(10);
@@ -29,6 +28,7 @@ public class GameInput {
                 keyboardEvents.broadcast(key, action);
             }
         };
+
         mouseInputCallBack = new GLFWMouseButtonCallback() {
             @Override
             public void invoke(long window, int button, int action, int mods) {
@@ -44,10 +44,10 @@ public class GameInput {
         mouseScrollCallBack = new GLFWScrollCallback() {
             @Override
             public void invoke(long window, double offsetX, double offsetY) {
-                if (offsetX > 0) {
-                    scrollEvents.broadcast(0,1);
-                } else if(offsetX < 0) {
-                    scrollEvents.broadcast(0,0);
+                if (offsetY > 0) {
+                    scrollEvents.broadcast(0, 1);
+                } else if (offsetY < 0) {
+                    scrollEvents.broadcast(0, 0);
                 }
 
             }
@@ -64,28 +64,28 @@ public class GameInput {
         keyboardEvents.registerListener(listener);
     }
 
-    public void regMouseButtonListener(KeyListener listener) {
-        mouseEvents.registerListener(listener);
-    }
-
-    public void regScrollListener(KeyListener listener) {
-        scrollEvents.registerListener(listener);
-    }
-
-    public void regMousePosListener(MousePosListener listener) {
-        mousePosEvents.registerListener(listener);
-    }
-
     public void unRegKeyboardListener(KeyListener listener) {
         keyboardEvents.unregisterListener(listener);
+    }
+
+    public void regMouseButtonListener(KeyListener listener) {
+        mouseEvents.registerListener(listener);
     }
 
     public void unRegMouseButtonListener(KeyListener listener) {
         mouseEvents.unregisterListener(listener);
     }
 
+    public void regScrollListener(KeyListener listener) {
+        scrollEvents.registerListener(listener);
+    }
+
     public void unRegScrollListener(KeyListener listener) {
         scrollEvents.unregisterListener(listener);
+    }
+
+    public void regMousePosListener(MousePosListener listener) {
+        mousePosEvents.registerListener(listener);
     }
 
     public void unRegMousePosListener(MousePosListener listener) {
@@ -106,9 +106,8 @@ public class GameInput {
     public void bindCallBacks(long window) {
         GLFW.glfwSetKeyCallback(window, keyInputCallBack);
         GLFW.glfwSetCursorPosCallback(window, mousePosCallBack);
-        GLFW.glfwSetMouseButtonCallback(window, mouseInputCallBack);
+        glfwSetMouseButtonCallback(window, mouseInputCallBack);
         GLFW.glfwSetScrollCallback(window, mouseScrollCallBack);
     }
-
 
 }

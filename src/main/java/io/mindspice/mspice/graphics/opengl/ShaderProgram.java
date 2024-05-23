@@ -1,4 +1,4 @@
-package io.mindspice.mspice.opengl;
+package io.mindspice.mspice.graphics.opengl;
 
 import io.mindspice.mspice.util.Utils;
 import org.lwjgl.opengl.GL30;

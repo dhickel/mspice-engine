@@ -245,3 +245,6 @@ public interface KeyActionConsumer {
     void accept(InputAction a, int b);
 }
 ```
+
+## Input Map
+> Map to handle key bindings to specific InputActions

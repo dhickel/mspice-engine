@@ -1,17 +1,15 @@
-package io.mindspice.mspice.core;
+package io.mindspice.mspice.core.game;
 
+import io.mindspice.mspice.core.interfaces.IGameLogic;
 import io.mindspice.mspice.enums.ActionType;
-import io.mindspice.mspice.game.Scene;
-import io.mindspice.mspice.input.KeyEventManager;
-import io.mindspice.mspice.opengl.Render;
+import io.mindspice.mspice.graphics.components.Scene;
+import io.mindspice.mspice.graphics.opengl.Render;
 import io.mindspice.mspice.input.KeyListener;
 import io.mindspice.mspice.input.MousePosListener;
 import io.mindspice.mspice.util.consumers.BiDoubleConsumer;
-import io.mindspice.mspice.util.consumers.IntDoubleConsumer;
 import io.mindspice.mspice.util.consumers.KeyActionConsumer;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.Arrays;
 import java.util.concurrent.locks.LockSupport;
 
 
@@ -22,17 +20,23 @@ public class GameEngine implements Runnable {
     private GameInput gameInput;
     private Render render;
     private Scene currScene;
+    private IGameLogic gameLogic;
     private boolean running;
     private int frameUPS = 60;
     private int logicUPS = 60;
 
     private GameEngine() { }
 
-    public void init(GameWindow window, GameInput input, Render render) {
+    public void init(GameWindow window, GameInput input, Render render, IGameLogic gameLogic) {
         this.gameWindow = window;
         this.gameInput = input;
         gameInput.bindCallBacks(window.getWindowHandle());
         this.render = render;
+        this.gameLogic = gameLogic;
+    }
+
+    public void setCurrScene(Scene scene) {
+        currScene = scene;
     }
 
     public void setFrameUPS(int updateRate) {
@@ -50,6 +54,9 @@ public class GameEngine implements Runnable {
     public void cleanup() {
         gameWindow.cleanup();
         gameInput.cleanup();
+        render.cleanup();
+        currScene.cleanup();
+        gameLogic.cleanup();
         GLFW.glfwDestroyWindow(gameWindow.getWindowHandle());
         GLFW.glfwTerminate();
     }
@@ -61,35 +68,31 @@ public class GameEngine implements Runnable {
     @Override
     public void run() {
         running = true;
-        long initialTime = System.nanoTime();
+        long initTime = System.nanoTime();
         double timeU = GameConst.NANO_SEC / logicUPS;
         double timeR = frameUPS > 0 ? GameConst.NANO_SEC / frameUPS : 0;
         double deltaUpdate = 0;
         double deltaFps = 0;
-        long lastTime = initialTime;
+        long lastTime = initTime;
         int frames = 0;
         long fpsTimer = System.currentTimeMillis();
 
-        KeyListener screenListener = new KeyListener(new ActionType[]{ActionType.SCREEN}, 10);
-        KeyListener gameListener = new KeyListener(new ActionType[]{ActionType.GAME_INPUT},10);
-        MousePosListener mPosListener = new MousePosListener();
-        gameInput.regMousePosListener(mPosListener);
+        final KeyListener screenListener = new KeyListener(new ActionType[]{ActionType.SCREEN}, 10);
+        final KeyListener gameListener = new KeyListener(new ActionType[]{ActionType.GAME_INPUT}, 10);
+        final MousePosListener mPosListener = new MousePosListener();
+        final KeyListener scrollListener = new KeyListener(new ActionType[]{ActionType.GAME_INPUT}, 10);
         gameInput.regKeyboardListener(screenListener);
         gameInput.regKeyboardListener(gameListener);
+        gameInput.regMousePosListener(mPosListener);
+        gameInput.regScrollListener(scrollListener);
 
-        KeyActionConsumer keyInputConsumer = (keyCode, keyState) -> {
+        final KeyActionConsumer keyInputConsumer = (keyCode, keyState) -> {
             System.out.println(keyCode + ":" + keyState);
         };
 
-        BiDoubleConsumer mouseInputConsumer = (posX, posY) -> {
-            System.out.println(posX + ":" + posY);
+        final BiDoubleConsumer mouseInputConsumer = (posX, posY) -> {
+          //  System.out.println(posX + ":" + posY);
         };
-
-        IntDoubleConsumer mouseScrollConsumer = (pos, offset) -> {
-            System.out.println(pos + ":" + offset);
-        };
-
-
 
         while (running && !gameWindow.windowShouldClose()) {
             gameWindow.pollEvents();
@@ -105,11 +108,17 @@ public class GameEngine implements Runnable {
             }
 
             if (deltaFps >= 1) {
-                // add render
-               // mPosListener.consume(mouseInputConsumer);
+                mPosListener.consume(mouseInputConsumer);
+                scrollListener.consume(keyInputConsumer);
+                gameListener.consume(keyInputConsumer);
 
+               // gameLogic.update(gameWindow, currScene, (long) (elapsed / GameConst.NANO_SEC));
+                gameLogic.update(gameWindow, currScene, elapsed);
+                gameLogic.input(gameWindow, currScene, elapsed);
 
+                render.render(currScene);
                 gameWindow.update();
+
                 deltaFps--;
                 frames++; // Increment the frame counter
             }
@@ -121,10 +130,12 @@ public class GameEngine implements Runnable {
             }
 
             lastTime = now;
-            LockSupport.parkNanos(1000);
+            LockSupport.parkNanos(500);
         }
         cleanup();
     }
+
+    // TODO vsync
 
     public GameInput getGameInput() {
         return gameInput;
