@@ -1,19 +1,16 @@
 package io.mindspice.mspice.engine.core.window;
 
-import io.mindspice.mspice.engine.core.engine.GameEngine;
 import io.mindspice.mspice.engine.core.engine.OnCleanUp;
 import io.mindspice.mspice.engine.core.input.InputManager;
 import io.mindspice.mspice.engine.enums.ActionType;
 import io.mindspice.mspice.engine.core.input.InputAction;
 import io.mindspice.mspice.engine.core.input.KeyListener;
-import io.mindspice.mspice.engine.util.consumers.KeyActionConsumer;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
-import java.util.function.IntConsumer;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -30,18 +27,19 @@ public class GameWindow implements OnCleanUp {
     private InputManager input;
     private int[] winPosX = new int[1];
     private int[] winPosY = new int[1];
+
     float fov = (float) Math.toRadians(90);
     float zNear = 1f;
     float zFar = 1000f;
-
     float aspectRatio;
-
     Matrix4f projectionMatrix;
 
-    private KeyListener keyListener = new KeyListener(new ActionType[]{ActionType.SCREEN}, 10);
+    private KeyListener keyListener = new KeyListener(new ActionType[]{ActionType.SCREEN}, 2);
 
     public GameWindow(String title, int[] size, boolean isCompatMode) {
-        if (!glfwInit()) { throw new IllegalStateException("Unable to initialize GLFW"); }
+        if (!glfwInit()) {
+            throw new IllegalStateException("Unable to initialize GLFW");
+        }
         setHints(isCompatMode);
 
         this.width = size[0];
@@ -50,25 +48,30 @@ public class GameWindow implements OnCleanUp {
         windowHandle = glfwCreateWindow(width, height, title, MemoryUtil.NULL, MemoryUtil.NULL);
         projectionMatrix = new Matrix4f();
 
-        if (windowHandle == NULL) { throw new RuntimeException("Failed to create the GLFW window"); }
+        if (windowHandle == NULL) {
+            throw new RuntimeException("Failed to create the GLFW window");
+
+        }
         GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-        if (vidMode == null) { throw new RuntimeException("Failed to get Video Mode"); }
+        if (vidMode == null) {
+            throw new RuntimeException("Failed to get Video Mode");
+        }
+
         winPosX[0] = (vidMode.width() - width) / 2;
         winPosY[0] = (vidMode.height() - height) / 2;
         glfwSetWindowPos(windowHandle, winPosX[0], winPosY[0]);
 
         setCallBacks();
+
         GLFW.glfwMakeContextCurrent(windowHandle);
         GL.createCapabilities();
-        GL11.glEnable(GL_DEPTH_TEST);
-        GL11.glEnable(GL_STENCIL_TEST);
-        //   GL11.glEnable(GL_CULL_FACE);
-        GL11.glEnable(GL_BACK);
+
 
         GL11.glViewport(0, 0, width, height);
         int[] fbWidth = new int[1];
         int[] fbeHeight = new int[1];
+
         GLFW.glfwGetFramebufferSize(windowHandle, fbWidth, fbeHeight);
         glfwSwapInterval(0);
         glfwShowWindow(windowHandle);
@@ -81,6 +84,7 @@ public class GameWindow implements OnCleanUp {
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+
         if (isCompatMode) {
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
         } else {
@@ -142,9 +146,13 @@ public class GameWindow implements OnCleanUp {
         glfwTerminate();
 
         GLFWErrorCallback errorCB = glfwSetErrorCallback(null);
-        if (errorCB != null) { errorCB.free(); }
+        if (errorCB != null) {
+            errorCB.free();
+        }
         GLFWWindowSizeCallback windowCB = glfwSetWindowSizeCallback(windowHandle, null);
-        if (windowCB != null) { windowCB.free(); }
+        if (windowCB != null) {
+            windowCB.free();
+        }
     }
 
     public Matrix4f getProjectionMatrix() {
@@ -184,9 +192,6 @@ public class GameWindow implements OnCleanUp {
         glfwPollEvents();
     }
 
-    public InputManager getInput() {
-        return input;
-    }
 
     public void setFullScreen(int action) {
         if (action != GLFW_RELEASE) { return; }
