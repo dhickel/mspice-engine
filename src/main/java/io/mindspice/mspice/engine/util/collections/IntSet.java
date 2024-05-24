@@ -1,6 +1,6 @@
-package io.mindspice.mspice.util.collections;
+package io.mindspice.mspice.engine.util.collections;
 
-import io.mindspice.mspice.util.Utils;
+import io.mindspice.mspice.engine.util.Utils;
 
 import java.util.Arrays;
 import java.util.function.IntConsumer;

@@ -1,19 +1,20 @@
-package io.mindspice.mspice.game;
+package io.mindspice.mspice.engine.game;
 
-import io.mindspice.mspice.graphics.components.Entity;
-import io.mindspice.mspice.graphics.primatives.Material;
-import io.mindspice.mspice.graphics.primatives.Mesh;
-import io.mindspice.mspice.graphics.primatives.Model;
-import io.mindspice.mspice.graphics.components.Scene;
-import io.mindspice.mspice.core.game.GameEngine;
-import io.mindspice.mspice.core.game.GameInput;
-import io.mindspice.mspice.core.game.GameWindow;
+import io.mindspice.mspice.engine.core.PlayerState;
+import io.mindspice.mspice.engine.core.input.InputManager;
+import io.mindspice.mspice.engine.core.window.GameWindow;
+import io.mindspice.mspice.engine.core.engine.IGameLogic;
+import io.mindspice.mspice.engine.core.renderer.components.Entity;
+import io.mindspice.mspice.engine.core.graphics.primatives.Material;
+import io.mindspice.mspice.engine.core.graphics.primatives.Model;
+import io.mindspice.mspice.engine.core.input.InputMap;
+import io.mindspice.mspice.engine.core.graphics.primatives.Mesh;
+import io.mindspice.mspice.engine.core.renderer.components.Scene;
+import io.mindspice.mspice.engine.core.engine.GameEngine;
 
-import io.mindspice.mspice.core.interfaces.IGameLogic;
-import io.mindspice.mspice.enums.InputAction;
-import io.mindspice.mspice.graphics.opengl.Render;
-import io.mindspice.mspice.graphics.primatives.Texture;
-import io.mindspice.mspice.singletons.InputMap;
+import io.mindspice.mspice.engine.core.input.InputAction;
+import io.mindspice.mspice.engine.core.renderer.opengl.Renderer;
+import io.mindspice.mspice.engine.core.graphics.primatives.Texture;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 
@@ -28,44 +29,40 @@ public class Main {
         int width = 1920;
         int height = 1080;
         float fov = 60.0f;
-
+        
         GameEngine engine = GameEngine.getInstance();
-        InputMap.getInstance().set(GLFW.GLFW_KEY_R, InputAction.RESIZE_SCREEN);
-        InputMap.getInstance().set(GLFW.GLFW_KEY_W, InputAction.MOVE_UP);
-        InputMap.getInstance().set(GLFW.GLFW_KEY_S, InputAction.MOVE_DOWN);
-        InputMap.getInstance().set(GLFW.GLFW_KEY_A, InputAction.MOVE_LEFT);
-        InputMap.getInstance().set(GLFW.GLFW_KEY_D, InputAction.MOVE_RIGHT);
-        InputMap.getInstance().set(0, InputAction.SCROLL_UP);
-        InputMap.getInstance().set(0, InputAction.SCROLL_DOWN);
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            public void run() {
-                engine.cleanup();
-            }
-        });
-        GameInput input = new GameInput();
-        GameWindow window = new GameWindow("test engine", new int[]{width, height}, false);
-        Logic logic = new Logic();
-        Render render = new Render(window);
-        Scene scene = new Scene(width, height, fov);
-        logic.init(window, scene, render);
-        engine.init(window, input, new Render(window), logic);
-        engine.setCurrScene(scene);
+        PlayerState ps = new PlayerState(width, height, fov); 
 
+
+        ps.getInputMap().set(GLFW.GLFW_KEY_R, InputAction.RESIZE_SCREEN);
+        ps.getInputMap().set(GLFW.GLFW_KEY_W, InputAction.MOVE_UP);
+        ps.getInputMap().set(GLFW.GLFW_KEY_S, InputAction.MOVE_DOWN);
+        ps.getInputMap().set(GLFW.GLFW_KEY_A, InputAction.MOVE_LEFT);
+        ps.getInputMap().set(GLFW.GLFW_KEY_D, InputAction.MOVE_RIGHT);
+        ps.getInputMap().set(0, InputAction.SCROLL_UP);
+        ps.getInputMap().set(0, InputAction.SCROLL_DOWN);
+
+
+        Logic logic = new Logic();
+        Scene scene = new Scene(width, height, fov);
+        logic.init(scene);
+        engine.init(ps, logic);
+        engine.setCurrScene(scene);
         engine.setFrameUPS(144);
-        window.regListeners();
 
         //window.setVSyncEnabled(true);
         engine.run();
 
     }
-    private static Entity cubeEntity;
-    private static Vector4f displInc = new Vector4f();
-    private static float rotation;
+
 
     private static class Logic implements IGameLogic {
+        private static Entity cubeEntity;
+        private static Vector4f displInc = new Vector4f();
+        private static float rotation;
 
         @Override
-        public void init(GameWindow window, Scene scene, Render render) {
+        public void init(Scene scene) {
 
             float[] positions = new float[]{
                     // V0
@@ -184,7 +181,7 @@ public class Main {
         }
 
         @Override
-        public void update(GameWindow window, Scene scene, long diffTimeMilli) {
+        public void update(long delta) {
             rotation += 0.25;
             if (rotation > 360) {
                 rotation = 0;

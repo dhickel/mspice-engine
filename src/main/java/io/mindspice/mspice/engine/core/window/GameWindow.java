@@ -1,8 +1,12 @@
-package io.mindspice.mspice.engine.core.engine;
+package io.mindspice.mspice.engine.core.window;
 
+import io.mindspice.mspice.engine.core.engine.GameEngine;
+import io.mindspice.mspice.engine.core.engine.OnCleanUp;
+import io.mindspice.mspice.engine.core.input.InputManager;
 import io.mindspice.mspice.engine.enums.ActionType;
-import io.mindspice.mspice.engine.enums.InputAction;
+import io.mindspice.mspice.engine.core.input.InputAction;
 import io.mindspice.mspice.engine.core.input.KeyListener;
+import io.mindspice.mspice.engine.util.consumers.KeyActionConsumer;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
@@ -17,13 +21,13 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 
-public class GameWindow {
+public class GameWindow implements OnCleanUp {
 
     private final long windowHandle;
     private int height;
     private int width;
     private boolean vSyncEnabled = false;
-    private GameInput input;
+    private InputManager input;
     private int[] winPosX = new int[1];
     private int[] winPosY = new int[1];
     float fov = (float) Math.toRadians(90);
@@ -34,8 +38,7 @@ public class GameWindow {
 
     Matrix4f projectionMatrix;
 
-    private KeyListener keyListener = new KeyListener(new ActionType[]{ActionType.SCREEN}, 100);
-    private IntConsumer[] keyConsumers = new IntConsumer[InputAction.values().length];
+    private KeyListener keyListener = new KeyListener(new ActionType[]{ActionType.SCREEN}, 10);
 
     public GameWindow(String title, int[] size, boolean isCompatMode) {
         if (!glfwInit()) { throw new IllegalStateException("Unable to initialize GLFW"); }
@@ -60,7 +63,7 @@ public class GameWindow {
         GL.createCapabilities();
         GL11.glEnable(GL_DEPTH_TEST);
         GL11.glEnable(GL_STENCIL_TEST);
-     //   GL11.glEnable(GL_CULL_FACE);
+        //   GL11.glEnable(GL_CULL_FACE);
         GL11.glEnable(GL_BACK);
 
         GL11.glViewport(0, 0, width, height);
@@ -69,11 +72,6 @@ public class GameWindow {
         GLFW.glfwGetFramebufferSize(windowHandle, fbWidth, fbeHeight);
         glfwSwapInterval(0);
         glfwShowWindow(windowHandle);
-    }
-
-    public void regListeners() {
-        GameEngine.getInstance().getGameInput().regKeyboardListener(keyListener);
-        keyConsumers[InputAction.RESIZE_SCREEN.ordinal()] = this::setFullScreen;
     }
 
     private void setHints(boolean isCompatMode) {
@@ -121,18 +119,23 @@ public class GameWindow {
     }
 
     public void update() {
-        consumeKeyEvent();
+        this.keyListener.consume((InputAction ia, int state) -> {
+            if (ia == InputAction.RESIZE_SCREEN) {
+                setFullScreen(state);
+            }
+        });
         glfwSwapBuffers(windowHandle);
     }
 
-    private void consumeKeyEvent() {
-        keyListener.getQueue().consumeAll(keyConsumers);
-    }
+//    private void consumeKeyEvent() {
+//        keyListener.getQueue().consumeAll(keyConsumers);
+//    }
 
     public void swapBuffers() {
         glfwSwapBuffers(windowHandle);
     }
 
+    @Override
     public void cleanup() {
         glfwFreeCallbacks(windowHandle);
         glfwDestroyWindow(windowHandle);
@@ -181,7 +184,7 @@ public class GameWindow {
         glfwPollEvents();
     }
 
-    public GameInput getInput() {
+    public InputManager getInput() {
         return input;
     }
 
@@ -211,6 +214,5 @@ public class GameWindow {
         public boolean compatibleProfile;
         public int[] windowSize;
     }
-
 
 }

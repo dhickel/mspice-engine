@@ -1,6 +1,5 @@
-package io.mindspice.mspice.engine.input;
+package io.mindspice.mspice.engine.core.input;
 
-import io.mindspice.mspice.engine.enums.InputAction;
 import io.mindspice.mspice.engine.enums.ActionType;
 import io.mindspice.mspice.engine.util.collections.CircularKeyQueue;
 import io.mindspice.mspice.engine.util.consumers.KeyActionConsumer;

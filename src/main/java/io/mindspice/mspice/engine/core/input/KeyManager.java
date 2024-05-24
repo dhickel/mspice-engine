@@ -1,18 +1,16 @@
-package io.mindspice.mspice.engine.input;
-
-import io.mindspice.mspice.engine.enums.InputAction;
-import io.mindspice.mspice.engine.singletons.InputMap;
+package io.mindspice.mspice.engine.core.input;
 
 import java.util.Arrays;
 
 
-public class KeyEventManager {
+public class KeyManager {
     private KeyListener[] keyListeners;
-    private final InputMap inputMap = InputMap.getInstance();
+    private final InputMap inputMap;
     int size = 0;
 
-    public KeyEventManager(int size) {
+    public KeyManager(int size, InputMap inputMap) {
         keyListeners = new KeyListener[size];
+        this.inputMap = inputMap;
         Arrays.fill(keyListeners, null);
     }
 
@@ -58,8 +56,9 @@ public class KeyEventManager {
     public void broadcast(int keyCode, int keyAction) {
         InputAction inputAction = inputMap.get(keyCode);
         if (inputAction == null) { return; }
+
         for (int i = 0; i < size; i++) {
-            var listener = keyListeners[i];
+            KeyListener listener = keyListeners[i];
             if (listener.isListening() && listener.isListenerFor(inputAction.actionType)) {
                 listener.offerInput(inputAction, keyAction);
             }

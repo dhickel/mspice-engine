@@ -1,4 +1,4 @@
-package io.mindspice.mspice.engine.graphics.primatives;
+package io.mindspice.mspice.engine.core.graphics.primatives;
 
 import org.lwjgl.system.MemoryStack;
 

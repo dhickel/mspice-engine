@@ -1,8 +1,8 @@
-package io.mindspice.mspice.util.collections;
+package io.mindspice.mspice.engine.util.collections;
 
 // Circular BiInt Queue, used to queue primitives for a high performance queue with no GC impact
 
-import io.mindspice.mspice.util.consumers.IntDoubleConsumer;
+import io.mindspice.mspice.engine.util.consumers.IntDoubleConsumer;
 
 
 public class CircularBiIntQueue {

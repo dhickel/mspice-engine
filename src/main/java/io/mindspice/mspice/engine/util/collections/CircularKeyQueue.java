@@ -1,9 +1,9 @@
-package io.mindspice.mspice.util.collections;
+package io.mindspice.mspice.engine.util.collections;
 
 // Circular BiInt Queue, used to queue primitives for a high performance queue with no GC impact
 
-import io.mindspice.mspice.enums.InputAction;
-import io.mindspice.mspice.util.consumers.KeyActionConsumer;
+import io.mindspice.mspice.engine.core.input.InputAction;
+import io.mindspice.mspice.engine.util.consumers.KeyActionConsumer;
 
 import java.util.Arrays;
 import java.util.function.IntConsumer;

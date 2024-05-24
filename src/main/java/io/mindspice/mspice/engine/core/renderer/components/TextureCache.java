@@ -1,6 +1,6 @@
-package io.mindspice.mspice.engine.graphics.components;
+package io.mindspice.mspice.engine.core.renderer.components;
 
-import io.mindspice.mspice.engine.graphics.primatives.Texture;
+import io.mindspice.mspice.engine.core.graphics.primatives.Texture;
 
 import java.util.HashMap;
 import java.util.Map;

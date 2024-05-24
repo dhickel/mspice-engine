@@ -1,4 +1,4 @@
-package io.mindspice.mspice.util.consumers;
+package io.mindspice.mspice.engine.util.consumers;
 
 @FunctionalInterface
 public interface BiIntConsumer  {

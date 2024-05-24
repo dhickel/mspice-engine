@@ -1,6 +1,6 @@
-package io.mindspice.mspice.util.collections;
+package io.mindspice.mspice.engine.util.collections;
 
-import io.mindspice.mspice.util.consumers.BiIntConsumer;
+import io.mindspice.mspice.engine.util.consumers.BiIntConsumer;
 
 import java.util.Arrays;
 

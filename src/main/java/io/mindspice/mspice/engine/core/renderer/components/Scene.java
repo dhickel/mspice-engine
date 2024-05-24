@@ -1,11 +1,12 @@
-package io.mindspice.mspice.engine.graphics.components;
+package io.mindspice.mspice.engine.core.renderer.components;
 
-import io.mindspice.mspice.engine.graphics.primatives.Model;
+import io.mindspice.mspice.engine.core.engine.OnCleanUp;
+import io.mindspice.mspice.engine.core.graphics.primatives.Model;
 
 import java.util.*;
 
 
-public class Scene {
+public class Scene implements OnCleanUp {
 
     private Map<String, Model> modelMap;
     private Projection projection;
@@ -36,6 +37,7 @@ public class Scene {
         modelMap.put(model.getId(), model);
     }
 
+    @Override
     public void cleanup() {
         modelMap.values().forEach(Model::cleanup);
     }

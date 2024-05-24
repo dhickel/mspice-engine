@@ -1,13 +1,13 @@
-package io.mindspice.mspice.engine.input;
+package io.mindspice.mspice.engine.core.input;
 
 import java.util.Arrays;
 
 
-public class MousePosEventManager {
+public class MousePosManager {
     private MousePosListener[] mouseListeners;
     private int size = 0;
 
-    public MousePosEventManager(int size) {
+    public MousePosManager(int size) {
         mouseListeners = new MousePosListener[size];
         Arrays.fill(mouseListeners, null);
     }

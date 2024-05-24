@@ -1,6 +1,6 @@
-package io.mindspice.mspice.util.consumers;
+package io.mindspice.mspice.engine.util.consumers;
 
-import io.mindspice.mspice.enums.InputAction;
+import io.mindspice.mspice.engine.core.input.InputAction;
 
 
 @FunctionalInterface

@@ -1,4 +1,4 @@
-package io.mindspice.mspice.engine.input;
+package io.mindspice.mspice.engine.core.input;
 
 import io.mindspice.mspice.engine.util.consumers.BiDoubleConsumer;
 

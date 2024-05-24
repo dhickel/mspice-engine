@@ -1,6 +1,6 @@
-package io.mindspice.mspice.engine.graphics.primatives;
+package io.mindspice.mspice.engine.core.graphics.primatives;
 
-import io.mindspice.mspice.engine.graphics.components.Entity;
+import io.mindspice.mspice.engine.core.renderer.components.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
