@@ -61,7 +61,7 @@ public class GameWindow {
         GL.createCapabilities();
         GL11.glEnable(GL_DEPTH_TEST);
         GL11.glEnable(GL_STENCIL_TEST);
-        GL11.glEnable(GL_CULL_FACE);
+     //   GL11.glEnable(GL_CULL_FACE);
         GL11.glEnable(GL_BACK);
 
         GL11.glViewport(0, 0, width, height);
