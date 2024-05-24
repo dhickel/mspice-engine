@@ -1,4 +1,4 @@
-package io.mindspice.mspice.input;
+package io.mindspice.mspice.engine.input;
 
 import java.util.Arrays;
 

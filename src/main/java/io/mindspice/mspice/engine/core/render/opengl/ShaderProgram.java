@@ -1,6 +1,6 @@
-package io.mindspice.mspice.graphics.opengl;
+package io.mindspice.mspice.engine.core.render.opengl;
 
-import io.mindspice.mspice.util.Utils;
+import io.mindspice.mspice.engine.util.Utils;
 import org.lwjgl.opengl.GL30;
 
 import java.util.*;

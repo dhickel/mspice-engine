@@ -1,15 +1,14 @@
-package io.mindspice.mspice.core.game;
+package io.mindspice.mspice.engine.core.engine;
 
-import io.mindspice.mspice.enums.ActionType;
-import io.mindspice.mspice.enums.InputAction;
-import io.mindspice.mspice.input.KeyListener;
+import io.mindspice.mspice.engine.enums.ActionType;
+import io.mindspice.mspice.engine.enums.InputAction;
+import io.mindspice.mspice.engine.core.input.KeyListener;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
-import java.util.Arrays;
 import java.util.function.IntConsumer;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;

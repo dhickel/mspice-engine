@@ -1,9 +1,8 @@
-package io.mindspice.mspice.graphics.opengl;
+package io.mindspice.mspice.engine.core.render.opengl;
 
-import io.mindspice.mspice.graphics.components.SceneRender;
-import io.mindspice.mspice.core.game.GameWindow;
-import io.mindspice.mspice.graphics.components.Scene;
-import org.lwjgl.opengl.GL;
+import io.mindspice.mspice.engine.core.window.GameWindow;
+import io.mindspice.mspice.engine.core.render.components.SceneRender;
+import io.mindspice.mspice.engine.core.render.components.Scene;
 import org.lwjgl.opengl.GL11;
 
 import static org.lwjgl.opengl.GL11.*;

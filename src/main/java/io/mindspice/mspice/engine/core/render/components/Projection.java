@@ -1,4 +1,4 @@
-package io.mindspice.mspice.graphics.components;
+package io.mindspice.mspice.engine.graphics.components;
 
 import org.joml.Matrix4f;
 

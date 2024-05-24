@@ -1,9 +1,9 @@
-package io.mindspice.mspice.core.game;
+package io.mindspice.mspice.engine.core.engine;
 
-import io.mindspice.mspice.input.KeyEventManager;
-import io.mindspice.mspice.input.KeyListener;
-import io.mindspice.mspice.input.MousePosEventManager;
-import io.mindspice.mspice.input.MousePosListener;
+import io.mindspice.mspice.engine.core.input.KeyEventManager;
+import io.mindspice.mspice.engine.core.input.KeyListener;
+import io.mindspice.mspice.engine.core.input.MousePosEventManager;
+import io.mindspice.mspice.engine.core.input.MousePosListener;
 import org.lwjgl.glfw.*;
 
 import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;

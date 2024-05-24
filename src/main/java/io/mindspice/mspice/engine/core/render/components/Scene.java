@@ -1,6 +1,6 @@
-package io.mindspice.mspice.graphics.components;
+package io.mindspice.mspice.engine.graphics.components;
 
-import io.mindspice.mspice.graphics.primatives.Model;
+import io.mindspice.mspice.engine.graphics.primatives.Model;
 
 import java.util.*;
 

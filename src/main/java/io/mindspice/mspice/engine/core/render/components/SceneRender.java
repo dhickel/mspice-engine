@@ -1,10 +1,10 @@
-package io.mindspice.mspice.graphics.components;
+package io.mindspice.mspice.engine.graphics.components;
 
-import io.mindspice.mspice.graphics.opengl.ShaderProgram;
-import io.mindspice.mspice.graphics.primatives.Material;
-import io.mindspice.mspice.graphics.primatives.Mesh;
-import io.mindspice.mspice.graphics.primatives.Model;
-import io.mindspice.mspice.graphics.primatives.Texture;
+import io.mindspice.mspice.engine.graphics.primatives.Material;
+import io.mindspice.mspice.engine.graphics.primatives.Model;
+import io.mindspice.mspice.engine.graphics.primatives.Texture;
+import io.mindspice.mspice.engine.graphics.opengl.ShaderProgram;
+import io.mindspice.mspice.engine.graphics.primatives.Mesh;
 
 import java.util.ArrayList;
 import java.util.Collection;

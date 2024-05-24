@@ -1,13 +1,13 @@
-package io.mindspice.mspice.core.game;
+package io.mindspice.mspice.engine.core.game;
 
-import io.mindspice.mspice.core.interfaces.IGameLogic;
-import io.mindspice.mspice.enums.ActionType;
-import io.mindspice.mspice.graphics.components.Scene;
-import io.mindspice.mspice.graphics.opengl.Render;
-import io.mindspice.mspice.input.KeyListener;
-import io.mindspice.mspice.input.MousePosListener;
-import io.mindspice.mspice.util.consumers.BiDoubleConsumer;
-import io.mindspice.mspice.util.consumers.KeyActionConsumer;
+import io.mindspice.mspice.engine.core.interfaces.IGameLogic;
+import io.mindspice.mspice.engine.enums.ActionType;
+import io.mindspice.mspice.engine.graphics.components.Scene;
+import io.mindspice.mspice.engine.graphics.opengl.Render;
+import io.mindspice.mspice.engine.input.KeyListener;
+import io.mindspice.mspice.engine.input.MousePosListener;
+import io.mindspice.mspice.engine.util.consumers.BiDoubleConsumer;
+import io.mindspice.mspice.engine.util.consumers.KeyActionConsumer;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.concurrent.locks.LockSupport;

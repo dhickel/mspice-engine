@@ -1,12 +1,9 @@
-package io.mindspice.mspice.input;
+package io.mindspice.mspice.engine.input;
 
-import io.mindspice.mspice.enums.ActionType;
-import io.mindspice.mspice.enums.InputAction;
-import io.mindspice.mspice.util.collections.CircularKeyQueue;
-import io.mindspice.mspice.util.consumers.KeyActionConsumer;
-
-import java.lang.reflect.Array;
-import java.util.Arrays;
+import io.mindspice.mspice.engine.enums.InputAction;
+import io.mindspice.mspice.engine.enums.ActionType;
+import io.mindspice.mspice.engine.util.collections.CircularKeyQueue;
+import io.mindspice.mspice.engine.util.consumers.KeyActionConsumer;
 
 
 public class KeyListener {

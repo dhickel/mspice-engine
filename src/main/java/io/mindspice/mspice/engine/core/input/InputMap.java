@@ -1,6 +1,6 @@
-package io.mindspice.mspice.singletons;
+package io.mindspice.mspice.engine.singletons;
 
-import io.mindspice.mspice.enums.InputAction;
+import io.mindspice.mspice.engine.enums.InputAction;
 import org.lwjgl.glfw.GLFW;
 
 

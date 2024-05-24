@@ -1,4 +1,4 @@
-package io.mindspice.mspice.graphics.primatives;
+package io.mindspice.mspice.engine.graphics.primatives;
 
 import java.util.ArrayList;
 import java.util.List;

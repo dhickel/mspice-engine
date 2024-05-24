@@ -1,7 +1,7 @@
-package io.mindspice.mspice.input;
+package io.mindspice.mspice.engine.input;
 
-import io.mindspice.mspice.enums.InputAction;
-import io.mindspice.mspice.singletons.InputMap;
+import io.mindspice.mspice.engine.enums.InputAction;
+import io.mindspice.mspice.engine.singletons.InputMap;
 
 import java.util.Arrays;
 

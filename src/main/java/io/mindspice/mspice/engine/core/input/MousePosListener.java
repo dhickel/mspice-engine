@@ -1,6 +1,6 @@
-package io.mindspice.mspice.input;
+package io.mindspice.mspice.engine.input;
 
-import io.mindspice.mspice.util.consumers.BiDoubleConsumer;
+import io.mindspice.mspice.engine.util.consumers.BiDoubleConsumer;
 
 
 public class MousePosListener {

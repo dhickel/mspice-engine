@@ -1,4 +1,4 @@
-package io.mindspice.mspice.enums;
+package io.mindspice.mspice.engine.enums;
 
 public enum InputAction {
     RESIZE_SCREEN(ActionType.SCREEN),
