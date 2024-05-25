@@ -18,7 +18,6 @@ public class GameEngine implements Runnable, OnCleanUp {
 
     private static final GameEngine INSTANCE = new GameEngine();
     private PlayerState playerState;
-    private Scene currScene;
     private IGameLogic gameLogic;
     private boolean running;
     private int frameUPS = 60;
@@ -33,9 +32,6 @@ public class GameEngine implements Runnable, OnCleanUp {
         Runtime.getRuntime().addShutdownHook(new Thread(this::cleanup));
     }
 
-    public void setCurrScene(Scene scene) {
-        currScene = scene;
-    }
 
     public void setFrameUPS(int updateRate) {
         frameUPS = updateRate;
@@ -51,7 +47,6 @@ public class GameEngine implements Runnable, OnCleanUp {
 
     @Override
     public void cleanup() {
-        currScene.cleanup();
         gameLogic.cleanup();
         playerState.cleanup();
 
@@ -92,10 +87,8 @@ public class GameEngine implements Runnable, OnCleanUp {
         };
 
         final GameWindow gameWindow = playerState.getGameWindow();
-        final Renderer renderer = playerState.getRenderer();
 
         while (running && !gameWindow.windowShouldClose()) {
-            gameWindow.pollEvents();
 
             long now = System.nanoTime();
             long elapsed = now - lastTime;
@@ -108,16 +101,11 @@ public class GameEngine implements Runnable, OnCleanUp {
             }
 
             if (deltaFps >= 1) {
-                mPosListener.consume(mouseInputConsumer);
-                scrollListener.consume(keyInputConsumer);
-                gameListener.consume(keyInputConsumer);
 
                 // gameLogic.update(gameWindow, currScene, (long) (elapsed / GameConst.NANO_SEC));
                 gameLogic.update(elapsed);
-                gameLogic.input(gameWindow, currScene, elapsed);
+                playerState.onUpdate(elapsed);
 
-                renderer.render(currScene);
-                gameWindow.update();
 
                 deltaFps--;
                 frames++; // Increment the frame counter
@@ -130,7 +118,7 @@ public class GameEngine implements Runnable, OnCleanUp {
             }
 
             lastTime = now;
-            LockSupport.parkNanos(500);
+
         }
         cleanup();
     }

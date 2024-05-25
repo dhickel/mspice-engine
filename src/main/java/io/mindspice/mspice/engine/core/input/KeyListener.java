@@ -4,6 +4,8 @@ import io.mindspice.mspice.engine.enums.ActionType;
 import io.mindspice.mspice.engine.util.collections.CircularKeyQueue;
 import io.mindspice.mspice.engine.util.consumers.KeyActionConsumer;
 
+import java.util.Arrays;
+
 
 public class KeyListener {
     private boolean isListening = true;
@@ -42,7 +44,7 @@ public class KeyListener {
 
 
     public void consume(KeyActionConsumer consumer) {
-        inputQueue.poll(consumer);
+        inputQueue.consume(consumer);
     }
 
     public CircularKeyQueue getQueue() {

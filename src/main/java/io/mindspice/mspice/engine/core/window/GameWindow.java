@@ -1,6 +1,8 @@
 package io.mindspice.mspice.engine.core.window;
 
+import io.mindspice.mspice.engine.core.engine.InputListener;
 import io.mindspice.mspice.engine.core.engine.OnCleanUp;
+import io.mindspice.mspice.engine.core.engine.OnUpdate;
 import io.mindspice.mspice.engine.core.input.InputManager;
 import io.mindspice.mspice.engine.enums.ActionType;
 import io.mindspice.mspice.engine.core.input.InputAction;
@@ -11,20 +13,18 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
-
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 
-public class GameWindow implements OnCleanUp {
+public class GameWindow implements OnCleanUp, OnUpdate, InputListener {
 
     private final long windowHandle;
     private int height;
     private int width;
     private boolean vSyncEnabled = false;
-    private InputManager input;
     private int[] winPosX = new int[1];
     private int[] winPosY = new int[1];
 
@@ -67,7 +67,6 @@ public class GameWindow implements OnCleanUp {
         GLFW.glfwMakeContextCurrent(windowHandle);
         GL.createCapabilities();
 
-
         GL11.glViewport(0, 0, width, height);
         int[] fbWidth = new int[1];
         int[] fbeHeight = new int[1];
@@ -107,6 +106,7 @@ public class GameWindow implements OnCleanUp {
             GL11.glViewport(0, 0, width, height);
             // TODO will want to update projection matrix as well
         });
+
     }
 
     public void setVSyncEnabled(boolean bool) {
@@ -122,12 +122,9 @@ public class GameWindow implements OnCleanUp {
         this.fov = (float) Math.toRadians(fov);
     }
 
-    public void update() {
-        this.keyListener.consume((InputAction ia, int state) -> {
-            if (ia == InputAction.RESIZE_SCREEN) {
-                setFullScreen(state);
-            }
-        });
+    @Override
+    public void onUpdate(long delta) {
+        this.keyListener.consume(this::setFullScreen);
         glfwSwapBuffers(windowHandle);
     }
 
@@ -192,9 +189,12 @@ public class GameWindow implements OnCleanUp {
         glfwPollEvents();
     }
 
+    public void setFullScreen(InputAction action, int state) {
 
-    public void setFullScreen(int action) {
-        if (action != GLFW_RELEASE) { return; }
+        if (action != InputAction.RESIZE_SCREEN || state != GLFW_RELEASE) {
+            return;
+        }
+
         glfwGetWindowPos(windowHandle, winPosX, winPosY);
 
         if (glfwGetWindowMonitor(windowHandle) == NULL) { // Dont Care arg is for refresh rate
@@ -213,6 +213,11 @@ public class GameWindow implements OnCleanUp {
 
     public boolean windowShouldClose() {
         return glfwWindowShouldClose(windowHandle);
+    }
+
+    @Override
+    public void registerListener(InputManager inputManager) {
+        inputManager.regKeyListener(keyListener);
     }
 
     public static class WindowOptions {

@@ -5,9 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="14b3ab0a-9d88-4bf1-ac58-63e9d9974232" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/engine/InputListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/window/viewport/ViewPort.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/PlayerState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/PlayerState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/engine/GameEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/engine/GameEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/KeyListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/KeyListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/MousePosListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/MousePosListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/Camera.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/Scene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/Scene.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/SceneRender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/SceneRender.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/opengl/Renderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/opengl/Renderer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/window/GameWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/window/GameWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/game/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/game/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/util/collections/CircularKeyQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/util/collections/CircularKeyQueue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/util/consumers/KeyActionConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/util/consumers/KeyActionConsumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/vertex.vs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/vertex.vsh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,8 +30,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -57,7 +70,7 @@
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.keymap",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -101,6 +114,7 @@
       <workItem from="1716367832485" duration="12001000" />
       <workItem from="1716444073961" duration="21811000" />
       <workItem from="1716521191026" duration="19614000" />
+      <workItem from="1716614838966" duration="7159000" />
     </task>
     <servers />
   </component>

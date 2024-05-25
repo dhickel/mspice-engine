@@ -23,6 +23,7 @@ public class Camera {
     }
 
     public void addRotation(float x, float y) {
+        System.out.println("Rotated: " + x + ", " + y);
         rotation.add(x, y);
         recalculate();
     }

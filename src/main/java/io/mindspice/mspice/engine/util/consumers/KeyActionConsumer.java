@@ -5,5 +5,5 @@ import io.mindspice.mspice.engine.core.input.InputAction;
 
 @FunctionalInterface
 public interface KeyActionConsumer {
-    void accept(InputAction a, int b);
+    void accept(InputAction input, int value);
 }

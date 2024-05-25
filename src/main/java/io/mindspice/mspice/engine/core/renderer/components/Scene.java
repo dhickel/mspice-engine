@@ -11,17 +11,11 @@ public class Scene implements OnCleanUp {
     private Map<String, Model> modelMap;
     private Projection projection;
     private TextureCache textureCache;
-    private Camera camera;
 
     public Scene(int width, int height, float fov) {
         modelMap = new HashMap<>();
         projection = new Projection(width, height, fov);
         textureCache = new TextureCache();
-        camera = new Camera();
-    }
-
-    public Camera getCamera() {
-        return camera;
     }
 
     public void addEntity(Entity entity) {

@@ -6,7 +6,6 @@ import io.mindspice.mspice.engine.core.input.InputAction;
 import io.mindspice.mspice.engine.util.consumers.KeyActionConsumer;
 
 import java.util.Arrays;
-import java.util.function.IntConsumer;
 
 
 public class CircularKeyQueue {
@@ -50,6 +49,7 @@ public class CircularKeyQueue {
         if (rejectIfFull && isFull()) { return; }
         inputActions[tail] = inputAction;
         keyStates[tail] = keyState;
+
         tail = (tail + 1) % capacity;
         if (size < capacity) {
             size++;
@@ -67,26 +67,15 @@ public class CircularKeyQueue {
 
 
 
-    public void consumeAll(KeyActionConsumer[] consumers) {
+    public void consume(KeyActionConsumer consumer) {
         while (!isEmpty()) {
-            if (consumers[inputActions[head].ordinal()] != null) {
-                consumers[inputActions[head].ordinal()].accept(inputActions[head], keyStates[head]);
-            }
+            consumer.accept(inputActions[head], keyStates[head]);
             head = (head + 1) % capacity;
             size--;
         }
     }
 
 
-    public void consumeAll(IntConsumer[] consumers) {
-        while (!isEmpty()) {
-            if (consumers[inputActions[head].ordinal()] != null) {
-                consumers[inputActions[head].ordinal()].accept(keyStates[head]);
-            }
-            head = (head + 1) % capacity;
-            size--;
-        }
-    }
 
     public void peek(KeyActionConsumer consumer) {
         if (!isEmpty()) {

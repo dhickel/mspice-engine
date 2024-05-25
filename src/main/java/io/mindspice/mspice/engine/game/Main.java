@@ -46,8 +46,8 @@ public class Main {
         Logic logic = new Logic();
         Scene scene = new Scene(width, height, fov);
         logic.init(scene);
+        ps.loadScene(scene);
         engine.init(ps, logic);
-        engine.setCurrScene(scene);
         engine.setFrameUPS(144);
 
         //window.setVSyncEnabled(true);

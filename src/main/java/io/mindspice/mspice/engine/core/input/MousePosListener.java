@@ -1,10 +1,12 @@
 package io.mindspice.mspice.engine.core.input;
 
-import io.mindspice.mspice.engine.util.consumers.BiDoubleConsumer;
+import org.joml.Vector2f;
+
+import java.util.function.Consumer;
 
 
 public class MousePosListener {
-    private double[] mousePos = new double[2];
+    private final Vector2f pos = new Vector2f();
     private boolean isListening = true;
     private boolean hasNext;
 
@@ -23,13 +25,16 @@ public class MousePosListener {
         return hasNext;
     }
 
-    public void consume(BiDoubleConsumer consumer) {
-        consumer.accept(mousePos[0], mousePos[1]);
+    public void consume(Consumer<Vector2f> consumer) {
+        consumer.accept(pos);
+    }
+
+    public Vector2f getPos() {
+        return pos;
     }
 
     public void offerInput(double posX, double posY) {
-        mousePos[0] = posX;
-        mousePos[1] = posY;
+        pos.set(posX, posY);
     }
 
 }

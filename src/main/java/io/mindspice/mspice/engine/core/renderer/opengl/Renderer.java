@@ -4,6 +4,7 @@ import io.mindspice.mspice.engine.core.engine.OnCleanUp;
 import io.mindspice.mspice.engine.core.window.GameWindow;
 import io.mindspice.mspice.engine.core.renderer.components.SceneRender;
 import io.mindspice.mspice.engine.core.renderer.components.Scene;
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
@@ -32,9 +33,9 @@ public class Renderer implements OnCleanUp {
         // Nothing to be done here yet
     }
 
-    public void render(Scene scene) {
+    public void render(Scene scene, Matrix4f viewMatrix) {
         GL11.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glViewport(0, 0, window.getWidth(), window.getHeight());
-        sceneRender.render(scene);
+        sceneRender.render(scene, viewMatrix);
     }
 }

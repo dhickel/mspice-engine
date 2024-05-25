@@ -4,8 +4,11 @@ import io.mindspice.mspice.engine.core.engine.OnCleanUp;
 import io.mindspice.mspice.engine.core.engine.OnUpdate;
 import io.mindspice.mspice.engine.core.input.InputManager;
 import io.mindspice.mspice.engine.core.input.InputMap;
+import io.mindspice.mspice.engine.core.renderer.components.Camera;
+import io.mindspice.mspice.engine.core.renderer.components.Scene;
 import io.mindspice.mspice.engine.core.renderer.opengl.Renderer;
 import io.mindspice.mspice.engine.core.window.GameWindow;
+import io.mindspice.mspice.engine.core.window.viewport.ViewPort;
 
 
 public class PlayerState implements OnUpdate, OnCleanUp {
@@ -13,6 +16,8 @@ public class PlayerState implements OnUpdate, OnCleanUp {
     private final InputMap inputMap;
     private final GameWindow gameWindow;
     private final Renderer renderer;
+    private final ViewPort viewPort;
+    private Scene currScene = null;
 
     /*
     InputMap: Holds players key binds
@@ -34,13 +39,26 @@ public class PlayerState implements OnUpdate, OnCleanUp {
 
         gameWindow = new GameWindow("Test", new int[]{width, height}, false);
         inputManager.bindToWindow(gameWindow.getWindowHandle());
+        gameWindow.registerListener(inputManager);
 
         renderer = new Renderer(gameWindow);
+
+        viewPort = new ViewPort();
+        viewPort.registerListener(inputManager);
+    }
+
+    public void loadScene(Scene scene) {
+        currScene = scene;
+
     }
 
     @Override
     public void onUpdate(long delta) {
-        gameWindow.update();
+        gameWindow.pollEvents();
+
+        viewPort.onUpdate(delta);
+        renderer.render(currScene, viewPort.getViewMatrix());
+        gameWindow.onUpdate(delta);
     }
 
     @Override
@@ -65,7 +83,5 @@ public class PlayerState implements OnUpdate, OnCleanUp {
     public GameWindow getGameWindow() {
         return gameWindow;
     }
-
-
 
 }

@@ -5,6 +5,7 @@ import io.mindspice.mspice.engine.core.graphics.primatives.Model;
 import io.mindspice.mspice.engine.core.graphics.primatives.Texture;
 import io.mindspice.mspice.engine.core.renderer.opengl.ShaderProgram;
 import io.mindspice.mspice.engine.core.graphics.primatives.Mesh;
+import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,7 +21,7 @@ public class SceneRender {
 
     public SceneRender() {
         List<ShaderProgram.ShaderModuleData> shaderModuleDataList = new ArrayList<>();
-        shaderModuleDataList.add(new ShaderProgram.ShaderModuleData("/home/mindspice/code/Java/game/mspice-engine/src/main/resources/vertex.vs", GL_VERTEX_SHADER));
+        shaderModuleDataList.add(new ShaderProgram.ShaderModuleData("/home/mindspice/code/Java/game/mspice-engine/src/main/resources/vertex.vsh", GL_VERTEX_SHADER));
         shaderModuleDataList.add(new ShaderProgram.ShaderModuleData("/home/mindspice/code/Java/game/mspice-engine/src/main/resources/fragment.frag", GL_FRAGMENT_SHADER));
         shaderProgram = new ShaderProgram(shaderModuleDataList);
         createUniforms();
@@ -30,11 +31,11 @@ public class SceneRender {
         shaderProgram.cleanup();
     }
 
-    public void render(Scene scene) {
+    public void render(Scene scene, Matrix4f viewMatrix) {
         shaderProgram.bind();
 
         uniformsMap.setUniform("projectionMatrix", scene.getProjection().getProjMatrix());
-
+        uniformsMap.setUniform("viewMatrix", viewMatrix);
 
         Collection<Model> models = scene.getModelMap().values();
         TextureCache textureCache = scene.getTextureCache();
@@ -65,5 +66,6 @@ public class SceneRender {
         uniformsMap.createUniform("projectionMatrix");
         uniformsMap.createUniform("modelMatrix");
         uniformsMap.createUniform("txtSampler");
+        uniformsMap.createUniform("viewMatrix");
     }
 }
