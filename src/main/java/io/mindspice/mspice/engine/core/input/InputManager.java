@@ -1,10 +1,10 @@
 package io.mindspice.mspice.engine.core.input;
 
-import io.mindspice.mspice.engine.core.engine.OnCleanUp;
+import io.mindspice.mspice.engine.core.engine.CleanUp;
 import org.lwjgl.glfw.*;
 
 
-public class InputManager implements OnCleanUp {
+public class InputManager implements CleanUp {
     private final KeyManager keyEvents;
     private final MousePosManager mousePosEvents;
 

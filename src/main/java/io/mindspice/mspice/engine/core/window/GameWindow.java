@@ -1,10 +1,10 @@
 package io.mindspice.mspice.engine.core.window;
 
 import io.mindspice.mspice.engine.core.engine.InputListener;
-import io.mindspice.mspice.engine.core.engine.OnCleanUp;
+import io.mindspice.mspice.engine.core.engine.CleanUp;
 import io.mindspice.mspice.engine.core.engine.OnUpdate;
 import io.mindspice.mspice.engine.core.input.InputManager;
-import io.mindspice.mspice.engine.enums.ActionType;
+import io.mindspice.mspice.engine.core.input.ActionType;
 import io.mindspice.mspice.engine.core.input.InputAction;
 import io.mindspice.mspice.engine.core.input.KeyListener;
 import org.joml.Matrix4f;
@@ -19,7 +19,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 
-public class GameWindow implements OnCleanUp, OnUpdate, InputListener {
+public class GameWindow implements CleanUp, OnUpdate, InputListener {
 
     private final long windowHandle;
     private int height;
@@ -34,7 +34,7 @@ public class GameWindow implements OnCleanUp, OnUpdate, InputListener {
     float aspectRatio;
     Matrix4f projectionMatrix;
 
-    private KeyListener keyListener = new KeyListener(new ActionType[]{ActionType.SCREEN}, 2);
+    private KeyListener keyListener = new KeyListener(new ActionType[]{ActionType.WINDOW}, 2);
 
     public GameWindow(String title, int[] size, boolean isCompatMode) {
         if (!glfwInit()) {
@@ -74,6 +74,7 @@ public class GameWindow implements OnCleanUp, OnUpdate, InputListener {
         GLFW.glfwGetFramebufferSize(windowHandle, fbWidth, fbeHeight);
         glfwSwapInterval(0);
         glfwShowWindow(windowHandle);
+        toggleCursor(false);
     }
 
     private void setHints(boolean isCompatMode) {
@@ -106,7 +107,12 @@ public class GameWindow implements OnCleanUp, OnUpdate, InputListener {
             GL11.glViewport(0, 0, width, height);
             // TODO will want to update projection matrix as well
         });
+    }
 
+    public void toggleCursor(boolean toggleOn) {
+        GLFW.glfwSetInputMode(windowHandle, GLFW.GLFW_CURSOR,
+                toggleOn ? GLFW.GLFW_CURSOR_NORMAL : GLFW.GLFW_CURSOR_DISABLED
+        );
     }
 
     public void setVSyncEnabled(boolean bool) {
@@ -124,7 +130,7 @@ public class GameWindow implements OnCleanUp, OnUpdate, InputListener {
 
     @Override
     public void onUpdate(long delta) {
-        this.keyListener.consume(this::setFullScreen);
+        this.keyListener.consume(this::keyCheck);
         glfwSwapBuffers(windowHandle);
     }
 
@@ -189,20 +195,23 @@ public class GameWindow implements OnCleanUp, OnUpdate, InputListener {
         glfwPollEvents();
     }
 
-    public void setFullScreen(InputAction action, int state) {
+    public void keyCheck(InputAction action, int state) {
+        if (state != GLFW_PRESS) { return; }
 
-        if (action != InputAction.RESIZE_SCREEN || state != GLFW_RELEASE) {
-            return;
-        }
+        switch (action) {
+            case RESIZE_WINDOW -> {
+                glfwGetWindowPos(windowHandle, winPosX, winPosY);
 
-        glfwGetWindowPos(windowHandle, winPosX, winPosY);
-
-        if (glfwGetWindowMonitor(windowHandle) == NULL) { // Dont Care arg is for refresh rate
-            glfwSetWindowMonitor(windowHandle, glfwGetPrimaryMonitor(), 0, 0, width, height, GLFW_DONT_CARE);
-        } else {
-            glfwSetWindowMonitor(
-                    windowHandle, NULL, winPosX[0], winPosY[0], width, height, GLFW_DONT_CARE
-            );
+                if (glfwGetWindowMonitor(windowHandle) == NULL) { // Dont Care arg is for refresh rate
+                    glfwSetWindowMonitor(windowHandle, glfwGetPrimaryMonitor(), 0, 0, width, height, GLFW_DONT_CARE);
+                } else {
+                    glfwSetWindowMonitor(
+                            windowHandle, NULL, winPosX[0], winPosY[0], width, height, GLFW_DONT_CARE
+                    );
+                }
+            }
+            case CLOSE_WINDOW -> glfwSetWindowShouldClose(windowHandle, true);
+            default -> { }
         }
     }
 

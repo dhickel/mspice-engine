@@ -2,19 +2,15 @@ package io.mindspice.mspice.engine.core.engine;
 
 import io.mindspice.mspice.engine.core.PlayerState;
 import io.mindspice.mspice.engine.core.window.GameWindow;
-import io.mindspice.mspice.engine.enums.ActionType;
-import io.mindspice.mspice.engine.core.renderer.components.Scene;
-import io.mindspice.mspice.engine.core.renderer.opengl.Renderer;
+import io.mindspice.mspice.engine.core.input.ActionType;
 import io.mindspice.mspice.engine.core.input.KeyListener;
 import io.mindspice.mspice.engine.core.input.MousePosListener;
 import io.mindspice.mspice.engine.util.consumers.BiDoubleConsumer;
 import io.mindspice.mspice.engine.util.consumers.KeyActionConsumer;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.concurrent.locks.LockSupport;
 
-
-public class GameEngine implements Runnable, OnCleanUp {
+public class GameEngine implements Runnable, CleanUp {
 
     private static final GameEngine INSTANCE = new GameEngine();
     private PlayerState playerState;
@@ -70,7 +66,7 @@ public class GameEngine implements Runnable, OnCleanUp {
         int frames = 0;
         long fpsTimer = System.currentTimeMillis();
 
-        final KeyListener screenListener = new KeyListener(new ActionType[]{ActionType.SCREEN}, 10);
+        final KeyListener screenListener = new KeyListener(new ActionType[]{ActionType.WINDOW}, 10);
         final KeyListener gameListener = new KeyListener(new ActionType[]{ActionType.GAME_INPUT}, 10);
         final MousePosListener mPosListener = new MousePosListener();
         final KeyListener scrollListener = new KeyListener(new ActionType[]{ActionType.GAME_INPUT}, 10);

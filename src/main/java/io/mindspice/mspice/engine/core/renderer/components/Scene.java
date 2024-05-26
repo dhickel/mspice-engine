@@ -1,12 +1,12 @@
 package io.mindspice.mspice.engine.core.renderer.components;
 
-import io.mindspice.mspice.engine.core.engine.OnCleanUp;
+import io.mindspice.mspice.engine.core.engine.CleanUp;
 import io.mindspice.mspice.engine.core.graphics.primatives.Model;
 
 import java.util.*;
 
 
-public class Scene implements OnCleanUp {
+public class Scene implements CleanUp {
 
     private Map<String, Model> modelMap;
     private Projection projection;

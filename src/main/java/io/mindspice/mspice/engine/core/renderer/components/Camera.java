@@ -1,30 +1,34 @@
 package io.mindspice.mspice.engine.core.renderer.components;
 
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-
 public class Camera {
-    private Vector3f direction;
-    private Vector3f position;
-    private Vector3f right;
-    private Vector2f rotation;
-    private Vector3f up;
-    private Matrix4f viewMatrix;
+    private final Vector3f position;
+    private final Matrix4f viewMatrix;
+    private final Quaternionf orientation;
+    private final Vector3f tempVector;
+    private Quaternionf deltaRotation;
 
     public Camera() {
-        direction = new Vector3f();
-        right = new Vector3f();
-        up = new Vector3f();
         position = new Vector3f();
         viewMatrix = new Matrix4f();
-        rotation = new Vector2f();
+        orientation = new Quaternionf();
+        tempVector = new Vector3f();
+        deltaRotation = new Quaternionf();
+
+        recalculate();
     }
 
-    public void addRotation(float x, float y) {
-        System.out.println("Rotated: " + x + ", " + y);
-        rotation.add(x, y);
+    public void adjustRotation(float deltaX, float deltaY) {
+        deltaRotation.identity().rotateY(-deltaY).rotateX(-deltaX);
+        orientation.mul(deltaRotation);
+        recalculate();
+    }
+
+    public void setRotation(float pitch, float yaw) {
+        orientation.identity().rotateY(yaw).rotateX(pitch);
         recalculate();
     }
 
@@ -36,56 +40,46 @@ public class Camera {
         return viewMatrix;
     }
 
-    public void moveBackwards(float inc) {
-        viewMatrix.positiveZ(direction).negate().mul(inc);
-        position.sub(direction);
+    // General move method that reuses tempVector
+    public void move(Vector3f mVec) {
+        tempVector.set(mVec);
+        orientation.transform(tempVector);
+        position.add(tempVector);
         recalculate();
     }
 
-    public void moveDown(float inc) {
-        viewMatrix.positiveY(up).mul(inc);
-        position.sub(up);
-        recalculate();
-    }
-
-    public void moveForward(float inc) {
-        viewMatrix.positiveZ(direction).negate().mul(inc);
-        position.add(direction);
-        recalculate();
-    }
-
-    public void moveLeft(float inc) {
-        viewMatrix.positiveX(right).mul(inc);
-        position.sub(right);
-        recalculate();
-    }
-
-    public void moveRight(float inc) {
-        viewMatrix.positiveX(right).mul(inc);
-        position.add(right);
-        recalculate();
-    }
-
-    public void moveUp(float inc) {
-        viewMatrix.positiveY(up).mul(inc);
-        position.add(up);
-        recalculate();
-    }
+//    public void moveForward(float distance) {
+//        move(0, 0, -distance);
+//    }
+//
+//    public void moveBackward(float distance) {
+//        move(0, 0, distance);
+//    }
+//
+//    public void moveRight(float distance) {
+//        move(distance, 0, 0);
+//    }
+//
+//    public void moveLeft(float distance) {
+//        move(-distance, 0, 0);
+//    }
+//
+//    public void moveUp(float distance) {
+//        move(0, distance, 0);
+//    }
+//
+//    public void moveDown(float distance) {
+//        move(0, -distance, 0);
+//    }
 
     private void recalculate() {
         viewMatrix.identity()
-                .rotateX(rotation.x)
-                .rotateY(rotation.y)
+                .rotate(orientation.conjugate(new Quaternionf()))
                 .translate(-position.x, -position.y, -position.z);
     }
 
     public void setPosition(float x, float y, float z) {
         position.set(x, y, z);
-        recalculate();
-    }
-
-    public void setRotation(float x, float y) {
-        rotation.set(x, y);
         recalculate();
     }
 }

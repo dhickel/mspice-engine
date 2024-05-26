@@ -1,10 +1,7 @@
 package io.mindspice.mspice.engine.core.input;
 
-import io.mindspice.mspice.engine.enums.ActionType;
 import io.mindspice.mspice.engine.util.collections.CircularKeyQueue;
 import io.mindspice.mspice.engine.util.consumers.KeyActionConsumer;
-
-import java.util.Arrays;
 
 
 public class KeyListener {

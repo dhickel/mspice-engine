@@ -1,22 +1,21 @@
 package io.mindspice.mspice.engine.core;
 
-import io.mindspice.mspice.engine.core.engine.OnCleanUp;
+import io.mindspice.mspice.engine.core.engine.CleanUp;
 import io.mindspice.mspice.engine.core.engine.OnUpdate;
 import io.mindspice.mspice.engine.core.input.InputManager;
 import io.mindspice.mspice.engine.core.input.InputMap;
-import io.mindspice.mspice.engine.core.renderer.components.Camera;
 import io.mindspice.mspice.engine.core.renderer.components.Scene;
 import io.mindspice.mspice.engine.core.renderer.opengl.Renderer;
 import io.mindspice.mspice.engine.core.window.GameWindow;
-import io.mindspice.mspice.engine.core.window.viewport.ViewPort;
+import io.mindspice.mspice.engine.core.window.FPViewPort;
 
 
-public class PlayerState implements OnUpdate, OnCleanUp {
+public class PlayerState implements OnUpdate, CleanUp {
     private final InputManager inputManager;
     private final InputMap inputMap;
     private final GameWindow gameWindow;
     private final Renderer renderer;
-    private final ViewPort viewPort;
+    private final FPViewPort FPViewPort;
     private Scene currScene = null;
 
     /*
@@ -43,8 +42,8 @@ public class PlayerState implements OnUpdate, OnCleanUp {
 
         renderer = new Renderer(gameWindow);
 
-        viewPort = new ViewPort();
-        viewPort.registerListener(inputManager);
+        FPViewPort = new FPViewPort();
+        FPViewPort.registerListener(inputManager);
     }
 
     public void loadScene(Scene scene) {
@@ -56,8 +55,8 @@ public class PlayerState implements OnUpdate, OnCleanUp {
     public void onUpdate(long delta) {
         gameWindow.pollEvents();
 
-        viewPort.onUpdate(delta);
-        renderer.render(currScene, viewPort.getViewMatrix());
+        FPViewPort.onUpdate(delta);
+        renderer.render(currScene, FPViewPort.getViewMatrix());
         gameWindow.onUpdate(delta);
     }
 

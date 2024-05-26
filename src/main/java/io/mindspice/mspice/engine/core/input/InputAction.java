@@ -1,10 +1,8 @@
 package io.mindspice.mspice.engine.core.input;
 
-import io.mindspice.mspice.engine.enums.ActionType;
-
-
 public enum InputAction {
-    RESIZE_SCREEN(ActionType.SCREEN),
+    RESIZE_WINDOW(ActionType.WINDOW),
+    CLOSE_WINDOW(ActionType.WINDOW),
     MOVE_UP(ActionType.GAME_INPUT),
     MOVE_DOWN(ActionType.GAME_INPUT),
     MOVE_LEFT(ActionType.GAME_INPUT),

@@ -1,6 +1,6 @@
 package io.mindspice.mspice.engine.core.renderer.opengl;
 
-import io.mindspice.mspice.engine.core.engine.OnCleanUp;
+import io.mindspice.mspice.engine.core.engine.CleanUp;
 import io.mindspice.mspice.engine.core.window.GameWindow;
 import io.mindspice.mspice.engine.core.renderer.components.SceneRender;
 import io.mindspice.mspice.engine.core.renderer.components.Scene;
@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL11.*;
 
 
-public class Renderer implements OnCleanUp {
+public class Renderer implements CleanUp {
     private final GameWindow window;
     private final SceneRender sceneRender;
 
@@ -25,6 +25,7 @@ public class Renderer implements OnCleanUp {
         GL.createCapabilities();
         GL11.glEnable(GL_DEPTH_TEST);
         GL11.glEnable(GL_STENCIL_TEST);
+        glEnable(GL_CULL_FACE);
         GL11.glEnable(GL_BACK);
     }
 
