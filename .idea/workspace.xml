@@ -5,28 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="14b3ab0a-9d88-4bf1-ac58-63e9d9974232" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/graphics/primatives/GuiMesh.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/util/ModelLoader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/engine/Engine.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/KeyCacheListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/KeyCallBackListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/MouseCallBackListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/MouseListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/opengl/GuiRenderer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/gui.frag" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/gui.vsh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/PlayerState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/PlayerState.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/engine/GameEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/engine/GameEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/engine/OnCleanUp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/engine/CleanUp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/graphics/primatives/Material.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/graphics/primatives/Material.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/engine/IGameLogic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/engine/IGameLogic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/engine/InputListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/engine/InputListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/ActionType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/ActionType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/InputAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/InputAction.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/InputManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/InputManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/KeyListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/KeyListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/Camera.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/Projection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/Projection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/Scene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/Scene.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/SceneRender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/SceneRender.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/KeyManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/KeyManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/MousePosListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/MousePosManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/MouseManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/UniformsMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/UniformsMap.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/opengl/Renderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/opengl/Renderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/window/GameWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/window/GameWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/window/viewport/ViewPort.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/window/FPViewPort.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/enums/ActionType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/input/ActionType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/window/FPViewPort.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/window/FpViewPort.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/window/GameWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/window/Window.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/game/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/game/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fragment.frag" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fragment.frag" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +70,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/mindspice/code/Java/game/mspice-engine/src/main/resources",
+    "last_opened_file_path": "/home/mindspice/code/Java/game/mspice-engine/src/main/java/io/mindspice/mspice/engine/core/input/KeyCallBackListener.java",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -77,6 +80,7 @@
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.0",
     "settings.editor.selected.configurable": "preferences.pluginManager",
+    "two.files.diff.last.used.file": "/home/mindspice/code/Java/game/mspice-engine/src/main/java/io/mindspice/mspice/engine/core/input/KeyCallBackListener.java",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -84,6 +88,9 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources" />
       <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="io.mindspice.mspice.engine.core.input" />
     </key>
   </component>
   <component name="RunManager">
@@ -120,7 +127,7 @@
       <workItem from="1716367832485" duration="12001000" />
       <workItem from="1716444073961" duration="21811000" />
       <workItem from="1716521191026" duration="19614000" />
-      <workItem from="1716614838966" duration="28762000" />
+      <workItem from="1716614838966" duration="56890000" />
     </task>
     <servers />
   </component>

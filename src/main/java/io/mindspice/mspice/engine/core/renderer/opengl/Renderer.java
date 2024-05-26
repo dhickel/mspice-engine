@@ -1,9 +1,9 @@
 package io.mindspice.mspice.engine.core.renderer.opengl;
 
 import io.mindspice.mspice.engine.core.engine.CleanUp;
-import io.mindspice.mspice.engine.core.window.GameWindow;
 import io.mindspice.mspice.engine.core.renderer.components.SceneRender;
 import io.mindspice.mspice.engine.core.renderer.components.Scene;
+import io.mindspice.mspice.engine.core.window.Window;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
@@ -12,10 +12,10 @@ import static org.lwjgl.opengl.GL11.*;
 
 
 public class Renderer implements CleanUp {
-    private final GameWindow window;
+    private final Window window;
     private final SceneRender sceneRender;
 
-    public Renderer(GameWindow window) {
+    public Renderer(Window window) {
         this.window = window;
         this.sceneRender = new SceneRender();
         initDefaults();

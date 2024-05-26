@@ -1,10 +1,7 @@
 package io.mindspice.mspice.engine.core.engine;
 
 import io.mindspice.mspice.engine.core.PlayerState;
-import io.mindspice.mspice.engine.core.window.GameWindow;
-import io.mindspice.mspice.engine.core.input.ActionType;
-import io.mindspice.mspice.engine.core.input.KeyListener;
-import io.mindspice.mspice.engine.core.input.MousePosListener;
+import io.mindspice.mspice.engine.core.window.Window;
 import io.mindspice.mspice.engine.util.consumers.BiDoubleConsumer;
 import io.mindspice.mspice.engine.util.consumers.KeyActionConsumer;
 import org.lwjgl.glfw.GLFW;
@@ -24,7 +21,6 @@ public class GameEngine implements Runnable, CleanUp {
     public void init(PlayerState playerState, IGameLogic gameLogic) {
         this.playerState = playerState;
         this.gameLogic = gameLogic;
-
         Runtime.getRuntime().addShutdownHook(new Thread(this::cleanup));
     }
 
@@ -66,13 +62,7 @@ public class GameEngine implements Runnable, CleanUp {
         int frames = 0;
         long fpsTimer = System.currentTimeMillis();
 
-        final KeyListener screenListener = new KeyListener(new ActionType[]{ActionType.WINDOW}, 10);
-        final KeyListener gameListener = new KeyListener(new ActionType[]{ActionType.GAME_INPUT}, 10);
-        final MousePosListener mPosListener = new MousePosListener();
-        final KeyListener scrollListener = new KeyListener(new ActionType[]{ActionType.GAME_INPUT}, 10);
-        playerState.getInputManager().regKeyListener(screenListener);
-        playerState.getInputManager().regKeyListener(gameListener);
-        playerState.getInputManager().regMousePosListener(mPosListener);
+
 
         final KeyActionConsumer keyInputConsumer = (keyCode, keyState) -> {
             System.out.println(keyCode + ":" + keyState);
@@ -82,9 +72,9 @@ public class GameEngine implements Runnable, CleanUp {
             //  System.out.println(posX + ":" + posY);
         };
 
-        final GameWindow gameWindow = playerState.getGameWindow();
+        final Window window = playerState.getGameWindow();
 
-        while (running && !gameWindow.windowShouldClose()) {
+        while (running && !window.windowShouldClose()) {
 
             long now = System.nanoTime();
             long elapsed = now - lastTime;
@@ -108,7 +98,7 @@ public class GameEngine implements Runnable, CleanUp {
             }
 
             if (System.currentTimeMillis() - fpsTimer > 1000) {
-                gameWindow.setWindowTitle("FPS: " + frames);
+                window.setWindowTitle("FPS: " + frames);
                 fpsTimer = System.currentTimeMillis();
                 frames = 0;
             }

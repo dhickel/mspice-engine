@@ -4,8 +4,8 @@ import io.mindspice.mspice.engine.core.engine.InputListener;
 import io.mindspice.mspice.engine.core.engine.OnUpdate;
 import io.mindspice.mspice.engine.core.input.InputAction;
 import io.mindspice.mspice.engine.core.input.InputManager;
-import io.mindspice.mspice.engine.core.input.KeyListener;
-import io.mindspice.mspice.engine.core.input.MousePosListener;
+import io.mindspice.mspice.engine.core.input.KeyCallBackListener;
+import io.mindspice.mspice.engine.core.input.MouseCallBackListener;
 import io.mindspice.mspice.engine.core.renderer.components.Camera;
 import io.mindspice.mspice.engine.core.input.ActionType;
 import org.joml.Math;
@@ -13,11 +13,13 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+import java.util.Arrays;
 
-public class FPViewPort implements OnUpdate, InputListener {
+
+public class FpViewPort implements OnUpdate, InputListener {
     private final Camera camera;
-    private final KeyListener keyListener;
-    private final MousePosListener mousePosListener;
+    private KeyCallBackListener keyListener;
+    private final MouseCallBackListener mouseCallBackListener;
     private boolean inWindow = true;
     private long delta;
 
@@ -33,22 +35,37 @@ public class FPViewPort implements OnUpdate, InputListener {
 
     private final float moveSpeed = 0.005f;
 
-    public FPViewPort() {
+    public FpViewPort() {
         camera = new Camera();
-        keyListener = new KeyListener(new ActionType[]{ActionType.GAME_INPUT}, 20);
-        mousePosListener = new MousePosListener();
-
+        mouseCallBackListener = new MouseCallBackListener(ActionType.GAME_INPUT);
     }
 
     @Override
     public void registerListener(InputManager inputManager) {
+        keyListener = new KeyCallBackListener(
+                ActionType.GAME_INPUT,
+                Arrays.stream(InputAction.values()).filter(e -> e.actionType == ActionType.GAME_INPUT).toList(),
+                20,
+                this::keyInputConsumer
+
+        );
         inputManager.regKeyListener(keyListener);
-        inputManager.regMousePosListener(mousePosListener);
+        inputManager.regMousePosListener(mouseCallBackListener);
+    }
+
+    @Override
+    public void setListening(boolean listening) {
+        keyListener.setListening(listening);
+    }
+
+    @Override
+    public boolean isListening() {
+        return keyListener.isListening();
     }
 
     private void procMouseInput() {
         prevMPos.set(currMPos);
-        currMPos.set(mousePosListener.getPos());
+        currMPos.set(mouseCallBackListener.getPos());
 
         viewVec.x = 0;
         viewVec.y = 0;
@@ -73,8 +90,6 @@ public class FPViewPort implements OnUpdate, InputListener {
     }
 
     private void procKeyInput(long delta) {
-        keyListener.consume(this::keyInputConsumer);
-
         float amount = delta * moveSpeed;
         moveVec.zero();
 
@@ -91,7 +106,6 @@ public class FPViewPort implements OnUpdate, InputListener {
 
     private void keyInputConsumer(InputAction input, int value) {
         if (value == 2) { return; } // Ignore held input signal
-
         switch (input) {
             case InputAction.MOVE_UP -> keyInputs[0] = value;
             case InputAction.MOVE_DOWN -> keyInputs[1] = value;

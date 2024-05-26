@@ -6,12 +6,14 @@ import io.mindspice.mspice.engine.core.engine.OnUpdate;
 import io.mindspice.mspice.engine.core.input.InputManager;
 import io.mindspice.mspice.engine.core.input.ActionType;
 import io.mindspice.mspice.engine.core.input.InputAction;
-import io.mindspice.mspice.engine.core.input.KeyListener;
+import io.mindspice.mspice.engine.core.input.KeyCallBackListener;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
+
+import java.util.List;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -19,7 +21,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 
-public class GameWindow implements CleanUp, OnUpdate, InputListener {
+public class Window implements CleanUp, OnUpdate, InputListener {
 
     private final long windowHandle;
     private int height;
@@ -34,9 +36,9 @@ public class GameWindow implements CleanUp, OnUpdate, InputListener {
     float aspectRatio;
     Matrix4f projectionMatrix;
 
-    private KeyListener keyListener = new KeyListener(new ActionType[]{ActionType.WINDOW}, 2);
+    private KeyCallBackListener keyListener;
 
-    public GameWindow(String title, int[] size, boolean isCompatMode) {
+    public Window(String title, int[] size, boolean isCompatMode) {
         if (!glfwInit()) {
             throw new IllegalStateException("Unable to initialize GLFW");
         }
@@ -130,7 +132,6 @@ public class GameWindow implements CleanUp, OnUpdate, InputListener {
 
     @Override
     public void onUpdate(long delta) {
-        this.keyListener.consume(this::keyCheck);
         glfwSwapBuffers(windowHandle);
     }
 
@@ -226,12 +227,23 @@ public class GameWindow implements CleanUp, OnUpdate, InputListener {
 
     @Override
     public void registerListener(InputManager inputManager) {
+        keyListener = new KeyCallBackListener(
+                ActionType.WINDOW,
+                List.of(InputAction.CLOSE_WINDOW, InputAction.RESIZE_WINDOW),
+                2,
+                this::keyCheck
+        );
         inputManager.regKeyListener(keyListener);
     }
 
-    public static class WindowOptions {
-        public boolean compatibleProfile;
-        public int[] windowSize;
+    @Override
+    public void setListening(boolean listening) {
+        keyListener.setListening(listening);
+    }
+
+    @Override
+    public boolean isListening() {
+        return keyListener.isListening();
     }
 
 }

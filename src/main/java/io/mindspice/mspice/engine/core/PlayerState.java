@@ -1,21 +1,26 @@
 package io.mindspice.mspice.engine.core;
 
+import imgui.ImGui;
 import io.mindspice.mspice.engine.core.engine.CleanUp;
 import io.mindspice.mspice.engine.core.engine.OnUpdate;
-import io.mindspice.mspice.engine.core.input.InputManager;
-import io.mindspice.mspice.engine.core.input.InputMap;
+import io.mindspice.mspice.engine.core.input.*;
 import io.mindspice.mspice.engine.core.renderer.components.Scene;
+import io.mindspice.mspice.engine.core.renderer.opengl.GuiRenderer;
 import io.mindspice.mspice.engine.core.renderer.opengl.Renderer;
-import io.mindspice.mspice.engine.core.window.GameWindow;
-import io.mindspice.mspice.engine.core.window.FPViewPort;
+import io.mindspice.mspice.engine.core.window.Window;
+import io.mindspice.mspice.engine.core.window.FpViewPort;
+
+import java.util.List;
 
 
 public class PlayerState implements OnUpdate, CleanUp {
     private final InputManager inputManager;
     private final InputMap inputMap;
-    private final GameWindow gameWindow;
+    private final Window window;
     private final Renderer renderer;
-    private final FPViewPort FPViewPort;
+    private final GuiRenderer guiRenderer;
+    private final FpViewPort viewport;
+
     private Scene currScene = null;
 
     /*
@@ -36,35 +41,74 @@ public class PlayerState implements OnUpdate, CleanUp {
         inputMap = new InputMap();
         inputManager = new InputManager(inputMap);
 
-        gameWindow = new GameWindow("Test", new int[]{width, height}, false);
-        inputManager.bindToWindow(gameWindow.getWindowHandle());
-        gameWindow.registerListener(inputManager);
+        window = new Window("Test", new int[]{width, height}, false);
+        inputManager.bindToWindow(window.getWindowHandle());
+        window.registerListener(inputManager);
 
-        renderer = new Renderer(gameWindow);
+        renderer = new Renderer(window);
+        guiRenderer = new GuiRenderer(window);
+        guiRenderer.registerListener(inputManager);
 
-        FPViewPort = new FPViewPort();
-        FPViewPort.registerListener(inputManager);
+        viewport = new FpViewPort();
+        viewport.registerListener(inputManager);
+        registerListeners();
     }
 
     public void loadScene(Scene scene) {
         currScene = scene;
+    }
 
+    private void registerListeners() {
+        KeyCallBackListener listener = new KeyCallBackListener(
+                ActionType.GUI,
+                List.of(InputAction.GUI_TAB),
+                2,
+                (InputAction action, int value) -> {
+                    if (value != 1) { return; }
+                    if (guiRenderer.isEnabled()) {
+                        guiRenderer.setEnabled(false);
+                        inputManager.disableFilter();
+                        window.toggleCursor(false);
+                    } else {
+                        guiRenderer.setEnabled(true);
+                       inputManager.setFilter(ActionType.GUI);
+                        window.toggleCursor(true);
+                    }
+                }
+        );
+        inputManager.regKeyListener(listener);
+
+        MouseCallBackListener mouseListener = new MouseCallBackListener(ActionType.GUI);
+        mouseListener.setPosConsumer((x, y) ->
+        {
+            ImGui.getIO().setMousePos((float) x, (float) y);
+        });
+
+        mouseListener.setButtonConsumer((action, value) -> {
+            if (action == InputAction.GUI_LEFT_CLICK) {
+                ImGui.getIO().setMouseDown(0, value == 1);
+            } else if (action == InputAction.GUI_RIGHT_CLICK) {
+                ImGui.getIO().setMouseDown(1, value == 1);
+            }
+        });
+
+        inputManager.regMousePosListener(mouseListener);
     }
 
     @Override
     public void onUpdate(long delta) {
-        gameWindow.pollEvents();
-
-        FPViewPort.onUpdate(delta);
-        renderer.render(currScene, FPViewPort.getViewMatrix());
-        gameWindow.onUpdate(delta);
+        window.pollEvents();
+        viewport.onUpdate(delta);
+        renderer.render(currScene, viewport.getViewMatrix());
+        guiRenderer.render();
+        window.onUpdate(delta);
     }
 
     @Override
     public void cleanup() {
         inputManager.cleanup();
         renderer.cleanup();
-        gameWindow.cleanup();
+        window.cleanup();
     }
 
     public InputMap getInputMap() {
@@ -79,8 +123,8 @@ public class PlayerState implements OnUpdate, CleanUp {
         return renderer;
     }
 
-    public GameWindow getGameWindow() {
-        return gameWindow;
+    public Window getGameWindow() {
+        return window;
     }
 
 }

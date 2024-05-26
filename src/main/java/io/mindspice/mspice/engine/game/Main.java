@@ -1,7 +1,8 @@
 package io.mindspice.mspice.engine.game;
 
 import io.mindspice.mspice.engine.core.PlayerState;
-import io.mindspice.mspice.engine.core.window.GameWindow;
+import io.mindspice.mspice.engine.core.engine.Engine;
+import io.mindspice.mspice.engine.core.window.Window;
 import io.mindspice.mspice.engine.core.engine.IGameLogic;
 import io.mindspice.mspice.engine.core.renderer.components.Entity;
 import io.mindspice.mspice.engine.core.graphics.primatives.Model;
@@ -10,7 +11,6 @@ import io.mindspice.mspice.engine.core.engine.GameEngine;
 
 import io.mindspice.mspice.engine.core.input.InputAction;
 import io.mindspice.mspice.engine.util.ModelLoader;
-import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.IOException;
@@ -22,10 +22,9 @@ public class Main {
         int width = 1920;
         int height = 1080;
         float fov = 60.0f;
-        
+
         GameEngine engine = GameEngine.getInstance();
         PlayerState ps = new PlayerState(width, height, fov);
-
 
         ps.getInputMap().set(GLFW.GLFW_KEY_R, InputAction.RESIZE_WINDOW);
         ps.getInputMap().set(GLFW.GLFW_KEY_ESCAPE, InputAction.CLOSE_WINDOW);
@@ -33,9 +32,11 @@ public class Main {
         ps.getInputMap().set(GLFW.GLFW_KEY_S, InputAction.MOVE_DOWN);
         ps.getInputMap().set(GLFW.GLFW_KEY_A, InputAction.MOVE_LEFT);
         ps.getInputMap().set(GLFW.GLFW_KEY_D, InputAction.MOVE_RIGHT);
+        ps.getInputMap().set(GLFW.GLFW_KEY_TAB, InputAction.GUI_TAB);
         ps.getInputMap().set(0, InputAction.SCROLL_UP);
         ps.getInputMap().set(0, InputAction.SCROLL_DOWN);
-
+        ps.getInputMap().set(GLFW.GLFW_MOUSE_BUTTON_LEFT, InputAction.GUI_LEFT_CLICK);
+        ps.getInputMap().set(GLFW.GLFW_MOUSE_BUTTON_RIGHT, InputAction.GUI_RIGHT_CLICK);
 
         Logic logic = new Logic();
         Scene scene = new Scene(width, height, fov);
@@ -43,16 +44,14 @@ public class Main {
         ps.loadScene(scene);
         engine.init(ps, logic);
         engine.setFrameUPS(144);
-
+        Engine.GET().init(engine);
+        Engine.GET().addPlayerState(ps);
         //window.setVSyncEnabled(true);
-        engine.run();
 
     }
 
-
     private static class Logic implements IGameLogic {
         private static Entity cubeEntity;
-        private static Vector4f displInc = new Vector4f();
         private static float rotation;
 
         @Override
@@ -68,7 +67,7 @@ public class Main {
         }
 
         @Override
-        public void input(GameWindow window, Scene scene, long diffTimeMilli) {
+        public void input(Window window, Scene scene, long diffTimeMilli) {
 
         }
 
@@ -87,6 +86,5 @@ public class Main {
 
         }
     }
-
 
 }

@@ -5,8 +5,8 @@ import org.lwjgl.glfw.*;
 
 
 public class InputManager implements CleanUp {
-    private final KeyManager keyEvents;
-    private final MousePosManager mousePosEvents;
+    private final KeyManager keyManager;
+    private final MouseManager mouseManager;
 
     private final GLFWKeyCallback keyInputCallBack;
     private final GLFWMouseButtonCallback mouseInputCallBack;
@@ -24,36 +24,39 @@ public class InputManager implements CleanUp {
      */
 
     public InputManager(InputMap inputMap) {
-        keyEvents = new KeyManager(20, inputMap);
-        mousePosEvents = new MousePosManager(20);
+        keyManager = new KeyManager(20, inputMap);
+        mouseManager = new MouseManager(20);
 
         keyInputCallBack = new GLFWKeyCallback() {
             @Override // Release = 0, Press = 1, Repeat =2
             public void invoke(long window, int key, int scanCode, int action, int mods) {
-                keyEvents.broadcast(key, action);
+                keyManager.broadcast(key, action);
             }
         };
 
         mouseInputCallBack = new GLFWMouseButtonCallback() {
             @Override
             public void invoke(long window, int button, int action, int mods) {
-                keyEvents.broadcast(button, action);
+                InputAction inputAction = inputMap.get(button);
+                if (inputAction != null) {
+                    mouseManager.broadcastButtons(inputAction, action);
+                }
             }
         };
 
         mousePosCallBack = new GLFWCursorPosCallback() {
             @Override
             public void invoke(long window, double x, double y) {
-                mousePosEvents.broadcast(x, y);
+                mouseManager.broadcastPos(x, y);
             }
         };
         mouseScrollCallBack = new GLFWScrollCallback() {
             @Override
             public void invoke(long window, double offsetX, double offsetY) {
                 if (offsetY > 0) {
-                    keyEvents.broadcast(0, 1);
+                    mouseManager.broadcastScroll(1);
                 } else if (offsetY < 0) {
-                    keyEvents.broadcast(0, 0);
+                    mouseManager.broadcastScroll(0);
                 }
             }
         };
@@ -80,20 +83,38 @@ public class InputManager implements CleanUp {
         }
     }
 
+    public KeyManager getKeyManager() {
+        return keyManager;
+    }
+
+    public MouseManager getMouseManager() {
+        return mouseManager;
+    }
+
+    public void setFilter(ActionType actionType) {
+        mouseManager.setListenFilter(actionType);
+        keyManager.setListenFilter(actionType);
+    }
+
+    public void disableFilter() {
+        mouseManager.disableListenFilter();
+        keyManager.disableListenFilter();
+    }
+
     public void regKeyListener(KeyListener listener) {
-        keyEvents.registerListener(listener);
+        keyManager.registerListener(listener);
     }
 
     public void unRegKeyListener(KeyListener listener) {
-        keyEvents.unregisterListener(listener);
+        keyManager.unregisterListener(listener);
     }
 
-    public void regMousePosListener(MousePosListener listener) {
-        mousePosEvents.registerListener(listener);
+    public void regMousePosListener(MouseCallBackListener listener) {
+        mouseManager.registerListener(listener);
     }
 
-    public void unRegMousePosListener(MousePosListener listener) {
-        mousePosEvents.unregisterListener(listener);
+    public void unRegMousePosListener(MouseCallBackListener listener) {
+        mouseManager.unregisterListener(listener);
     }
 
 }

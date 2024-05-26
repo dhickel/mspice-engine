@@ -6,10 +6,11 @@ import java.util.Arrays;
 public class KeyManager {
     private KeyListener[] keyListeners;
     private final InputMap inputMap;
+    private ActionType listenFilter = null;
     int size = 0;
 
     public KeyManager(int size, InputMap inputMap) {
-        keyListeners = new KeyListener[size];
+        keyListeners = new KeyCallBackListener[size];
         this.inputMap = inputMap;
         Arrays.fill(keyListeners, null);
     }
@@ -38,29 +39,32 @@ public class KeyManager {
     }
 
     private void sort() { // TODO maybe just swap last and null?
-        // only needs to sort one null to the end, most efficient way to do it
         for (int i = 0; i < keyListeners.length; i++) {
             if (keyListeners[i] == null) {
-                for (int j = keyListeners.length - 1; j > i; j--) {
-                    if (keyListeners[j] != null) {
-                        keyListeners[i] = keyListeners[j];
-                        keyListeners[j] = null;
-                        break;
-                    }
-                }
+                keyListeners[i] = keyListeners[size - 1];
+                keyListeners[size - 1] = null;
             }
         }
     }
 
-    // @Override
+    public void setListenFilter(ActionType actionType) {
+        listenFilter = actionType;
+    }
+
+    public void disableListenFilter() {
+        listenFilter = null;
+    }
+
     public void broadcast(int keyCode, int keyAction) {
         InputAction inputAction = inputMap.get(keyCode);
+
         if (inputAction == null) { return; }
+        if (listenFilter != null && inputAction.actionType != listenFilter) { return; }
 
         for (int i = 0; i < size; i++) {
             KeyListener listener = keyListeners[i];
             if (listener.isListening() && listener.isListenerFor(inputAction.actionType)) {
-                listener.offerInput(inputAction, keyAction);
+                listener.offer(inputAction, keyAction);
             }
         }
     }

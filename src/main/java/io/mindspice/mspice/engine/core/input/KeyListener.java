@@ -1,54 +1,15 @@
 package io.mindspice.mspice.engine.core.input;
 
-import io.mindspice.mspice.engine.util.collections.CircularKeyQueue;
-import io.mindspice.mspice.engine.util.consumers.KeyActionConsumer;
+public interface KeyListener {
 
+    boolean isListening();
 
-public class KeyListener {
-    private boolean isListening = true;
-    private CircularKeyQueue inputQueue;
-    private ActionType[] listeningFor;
+    boolean isListenerFor(ActionType actionType);
 
-    public KeyListener(ActionType[] listeningFor, int queueSize) {
-        this.listeningFor = listeningFor;
-        inputQueue = new CircularKeyQueue(queueSize);
-    }
+    ActionType getListeningFor();
 
+    void offer(InputAction inputAction, int keyAction);
 
-    public boolean isListenerFor(ActionType actionType) {
-        for (int i = 0; i < listeningFor.length; i++) {
-            if (listeningFor[i] == actionType) {
-                return true;
-            }
-        }
-        return false;
-    }
+    void setListening(boolean listening);
 
-
-    public void offerInput(InputAction inputAction, int keyAction) {
-        if (!isListening) { return; }
-        inputQueue.add(inputAction, keyAction);
-    }
-
-
-    public void setListening(boolean isListening) {
-        this.isListening = isListening;
-    }
-
-    public boolean isListening() {
-        return isListening;
-    }
-
-
-    public void consume(KeyActionConsumer consumer) {
-        inputQueue.consume(consumer);
-    }
-
-    public CircularKeyQueue getQueue() {
-        return inputQueue;
-    }
-
-    public ActionType[] getListeningFor() {
-        return listeningFor;
-    }
 }
