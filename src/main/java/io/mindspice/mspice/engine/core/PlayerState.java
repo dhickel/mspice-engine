@@ -1,9 +1,11 @@
 package io.mindspice.mspice.engine.core;
 
 import imgui.ImGui;
+import imgui.flag.ImGuiCond;
 import io.mindspice.mspice.engine.core.engine.CleanUp;
 import io.mindspice.mspice.engine.core.engine.OnUpdate;
 import io.mindspice.mspice.engine.core.input.*;
+import io.mindspice.mspice.engine.core.renderer.components.GuiScene;
 import io.mindspice.mspice.engine.core.renderer.components.Scene;
 import io.mindspice.mspice.engine.core.renderer.opengl.GuiRenderer;
 import io.mindspice.mspice.engine.core.renderer.opengl.Renderer;
@@ -52,6 +54,8 @@ public class PlayerState implements OnUpdate, CleanUp {
         viewport = new FpViewPort();
         viewport.registerListener(inputManager);
         registerListeners();
+
+        guiRenderer.loadScene(guiDemo);
     }
 
     public void loadScene(Scene scene) {
@@ -71,7 +75,7 @@ public class PlayerState implements OnUpdate, CleanUp {
                         window.toggleCursor(false);
                     } else {
                         guiRenderer.setEnabled(true);
-                       inputManager.setFilter(ActionType.GUI);
+                        inputManager.setFilter(ActionType.GUI);
                         window.toggleCursor(true);
                     }
                 }
@@ -126,5 +130,16 @@ public class PlayerState implements OnUpdate, CleanUp {
     public Window getGameWindow() {
         return window;
     }
+
+    public GuiScene guiDemo = new GuiScene() {
+        @Override
+        public void render() {
+            ImGui.newFrame();
+            ImGui.setNextWindowPos(0, 0, ImGuiCond.Always);
+            ImGui.showDemoWindow();
+            ImGui.endFrame();
+            ImGui.render();
+        }
+    };
 
 }

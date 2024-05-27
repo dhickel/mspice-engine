@@ -9,6 +9,7 @@ import io.mindspice.mspice.engine.core.engine.InputListener;
 import io.mindspice.mspice.engine.core.graphics.primatives.GuiMesh;
 import io.mindspice.mspice.engine.core.graphics.primatives.Texture;
 import io.mindspice.mspice.engine.core.input.*;
+import io.mindspice.mspice.engine.core.renderer.components.GuiScene;
 import io.mindspice.mspice.engine.core.renderer.components.UniformsMap;
 import io.mindspice.mspice.engine.core.window.Window;
 import org.joml.Vector2f;
@@ -31,6 +32,7 @@ public class GuiRenderer implements InputListener, CleanUp {
     private UniformsMap uniformsMap;
     private KeyCallBackListener keyListener;
     private boolean enabled = false;
+    private GuiScene guiScene;
 
     public GuiRenderer(Window window) {
         List<ShaderProgram.ShaderModuleData> shaderModuleDataList = new ArrayList<>();
@@ -48,6 +50,10 @@ public class GuiRenderer implements InputListener, CleanUp {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public void loadScene(GuiScene guiScene) {
+        this.guiScene = guiScene;
     }
 
     public boolean isEnabled() {
@@ -86,7 +92,7 @@ public class GuiRenderer implements InputListener, CleanUp {
 
     @Override
     public void registerListener(InputManager inputManager) {
-       // imGui.setKeyMap(ImGuiKey.Tab, InputAction.GUI_TAB.ordinal());
+        // imGui.setKeyMap(ImGuiKey.Tab, InputAction.GUI_TAB.ordinal());
         imGui.setKeyMap(ImGuiKey.LeftArrow, InputAction.GUI_LEFT.ordinal());
         imGui.setKeyMap(ImGuiKey.RightArrow, InputAction.GUI_RIGHT.ordinal());
         imGui.setKeyMap(ImGuiKey.UpArrow, InputAction.GUI_UP.ordinal());
@@ -119,12 +125,8 @@ public class GuiRenderer implements InputListener, CleanUp {
     }
 
     public void render() {
-        if (!enabled) { return; }
-        ImGui.newFrame();
-        ImGui.setNextWindowPos(0, 0, ImGuiCond.Always);
-        ImGui.showDemoWindow();
-        ImGui.endFrame();
-        ImGui.render();
+        if (!enabled || guiScene == null) { return; }
+        guiScene.render();
 
         shaderProgram.bind();
 
