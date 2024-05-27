@@ -79,11 +79,32 @@ public class ModelLoader {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             AIColor4D color = AIColor4D.create();
 
-            int result = Assimp.aiGetMaterialColor(aiMaterial, Assimp.AI_MATKEY_COLOR_DIFFUSE, Assimp.aiTextureType_NONE, 0,
+            int result = Assimp.aiGetMaterialColor(aiMaterial, Assimp.AI_MATKEY_COLOR_AMBIENT, Assimp.aiTextureType_NONE, 0,
+                    color);
+            if (result == Assimp.aiReturn_SUCCESS) {
+                material.setAmbientColor(new Vector4f(color.r(), color.g(), color.b(), color.a()));
+            }
+
+            result = Assimp.aiGetMaterialColor(aiMaterial, Assimp.AI_MATKEY_COLOR_DIFFUSE, Assimp.aiTextureType_NONE, 0,
                     color);
             if (result == Assimp.aiReturn_SUCCESS) {
                 material.setDiffuseColor(new Vector4f(color.r(), color.g(), color.b(), color.a()));
             }
+
+            result = Assimp.aiGetMaterialColor(aiMaterial, Assimp.AI_MATKEY_COLOR_SPECULAR, Assimp.aiTextureType_NONE, 0,
+                    color);
+            if (result == Assimp.aiReturn_SUCCESS) {
+                material.setSpecularColor(new Vector4f(color.r(), color.g(), color.b(), color.a()));
+            }
+
+            float reflectance = 0.0f;
+            float[] shininessFactor = new float[]{0.0f};
+            int[] pMax = new int[]{1};
+            result = Assimp.aiGetMaterialFloatArray(aiMaterial, Assimp.AI_MATKEY_SHININESS_STRENGTH, Assimp.aiTextureType_NONE, 0, shininessFactor, pMax);
+            if (result != Assimp.aiReturn_SUCCESS) {
+                reflectance = shininessFactor[0];
+            }
+            material.setReflectance(reflectance);
 
             AIString aiTexturePath = AIString.calloc(stack);
             Assimp.aiGetMaterialTexture(aiMaterial, Assimp.aiTextureType_DIFFUSE, 0, aiTexturePath, (IntBuffer) null,
@@ -101,6 +122,7 @@ public class ModelLoader {
 
     private static Mesh processMesh(AIMesh aiMesh) {
         float[] vertices = processVertices(aiMesh);
+        float[] normals = processNormals(aiMesh);
         float[] textCoords = processTextCoords(aiMesh);
         int[] indices = processIndices(aiMesh);
 
@@ -110,7 +132,20 @@ public class ModelLoader {
             textCoords = new float[numElements];
         }
 
-        return new Mesh(vertices, textCoords, indices);
+        return new Mesh(vertices, normals, textCoords, indices);
+    }
+
+    private static float[] processNormals(AIMesh aiMesh) {
+        AIVector3D.Buffer buffer = aiMesh.mNormals();
+        float[] data = new float[buffer.remaining() * 3];
+        int pos = 0;
+        while (buffer.remaining() > 0) {
+            AIVector3D normal = buffer.get();
+            data[pos++] = normal.x();
+            data[pos++] = normal.y();
+            data[pos++] = normal.z();
+        }
+        return data;
     }
 
     private static int[] processIndices(AIMesh aiMesh) {

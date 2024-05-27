@@ -11,6 +11,8 @@ public class Scene implements CleanUp {
     private Map<String, Model> modelMap;
     private Projection projection;
     private TextureCache textureCache;
+    private SceneLights sceneLights;
+
 
     public Scene(int width, int height, float fov) {
         modelMap = new HashMap<>();
@@ -50,5 +52,13 @@ public class Scene implements CleanUp {
 
     public void resize(int width, int height) {
         projection.updateProjMatrix(width, height);
+    }
+
+    public SceneLights getSceneLights() {
+        return sceneLights;
+    }
+
+    public void setSceneLights(SceneLights sceneLights) {
+        this.sceneLights = sceneLights;
     }
 }

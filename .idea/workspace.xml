@@ -5,7 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="14b3ab0a-9d88-4bf1-ac58-63e9d9974232" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/SceneLights.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/lighting/AmbientLight.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/lighting/DirectionalLight.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/lighting/PointLight.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/lighting/SpotLight.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/PlayerState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/PlayerState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/graphics/primatives/Material.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/graphics/primatives/Material.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/graphics/primatives/Mesh.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/graphics/primatives/Mesh.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/GuiScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/GuiScene.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/Scene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/Scene.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/SceneRender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/SceneRender.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/UniformsMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/core/renderer/components/UniformsMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/game/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/game/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/util/ModelLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/mindspice/mspice/engine/util/ModelLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fragment.frag" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/scene.frag" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/vertex.vsh" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/scene.vsh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,7 +119,7 @@
       <workItem from="1716367832485" duration="12001000" />
       <workItem from="1716444073961" duration="21811000" />
       <workItem from="1716521191026" duration="19614000" />
-      <workItem from="1716614838966" duration="63634000" />
+      <workItem from="1716614838966" duration="77500000" />
     </task>
     <servers />
   </component>

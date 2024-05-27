@@ -2,6 +2,9 @@ package io.mindspice.mspice.engine.game;
 
 import io.mindspice.mspice.engine.core.PlayerState;
 import io.mindspice.mspice.engine.core.engine.Engine;
+import io.mindspice.mspice.engine.core.renderer.components.SceneLights;
+import io.mindspice.mspice.engine.core.renderer.lighting.PointLight;
+import io.mindspice.mspice.engine.core.renderer.lighting.SpotLight;
 import io.mindspice.mspice.engine.core.window.Window;
 import io.mindspice.mspice.engine.core.engine.IGameLogic;
 import io.mindspice.mspice.engine.core.renderer.components.Entity;
@@ -11,6 +14,7 @@ import io.mindspice.mspice.engine.core.engine.GameEngine;
 
 import io.mindspice.mspice.engine.core.input.InputAction;
 import io.mindspice.mspice.engine.util.ModelLoader;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.IOException;
@@ -61,8 +65,19 @@ public class Main {
             scene.addModel(cubeModel);
 
             cubeEntity = new Entity("cube-entity", cubeModel.getId());
-            cubeEntity.setPosition(0, 0, -2);
+            cubeEntity.setPosition(0, 0f, -2);
+            cubeEntity.updateModelMatrix();
             scene.addEntity(cubeEntity);
+
+            SceneLights sceneLights = new SceneLights();
+            sceneLights.getAmbientLight().setIntensity(0.3f);
+            scene.setSceneLights(sceneLights);
+            sceneLights.getPointLights().add(new PointLight(new Vector3f(1, 1, 1),
+                    new Vector3f(0, 0, -1.4f), 1.0f));
+
+            Vector3f coneDir = new Vector3f(0, 0, -1);
+            sceneLights.getSpotLights().add(new SpotLight(new PointLight(new Vector3f(1, 1, 1),
+                    new Vector3f(0, 0, -1.4f), 0.0f), coneDir, 140.0f));
 
         }
 
