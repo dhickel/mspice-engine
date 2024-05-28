@@ -17,14 +17,14 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 public class SkyBoxRender {
     private ShaderProgram shaderProgram;
     private UniformsMap uniformsMap;
-    private Matrix4f viewMatrix;
+    private Matrix4f skyViewMatrix;
 
     public SkyBoxRender() {
         List<ShaderProgram.ShaderModuleData> shaderModuleDataList = new ArrayList<>();
         shaderModuleDataList.add(new ShaderProgram.ShaderModuleData("/home/mindspice/code/Java/game/mspice-engine/src/main/resources/skybox.vsh", GL_VERTEX_SHADER));
         shaderModuleDataList.add(new ShaderProgram.ShaderModuleData("/home/mindspice/code/Java/game/mspice-engine/src/main/resources/skybox.frag", GL_FRAGMENT_SHADER));
         shaderProgram = new ShaderProgram(shaderModuleDataList);
-        viewMatrix = new Matrix4f();
+        skyViewMatrix = new Matrix4f();
         createUniforms();
     }
 
@@ -50,10 +50,10 @@ public class SkyBoxRender {
         shaderProgram.bind();
 
         uniformsMap.setUniform("projectionMatrix", scene.getProjection().getProjMatrix());
-
-        viewMatrix.m30(0);
-        viewMatrix.m31(0);
-        viewMatrix.m32(0);
+        skyViewMatrix.set(viewMatrix);
+        skyViewMatrix.m30(0);
+        skyViewMatrix.m31(0);
+        skyViewMatrix.m32(0);
         uniformsMap.setUniform("viewMatrix", viewMatrix);
         uniformsMap.setUniform("txtSampler", 0);
 

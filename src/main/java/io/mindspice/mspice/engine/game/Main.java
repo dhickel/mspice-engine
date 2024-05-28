@@ -93,7 +93,7 @@ public class Main {
             scene.setSceneLights(sceneLights);
 
             SkyBox skyBox = new SkyBox("/home/mindspice/code/Java/game/mspice-engine/src/main/resources/skybox.obj", scene.getTextureCache());
-            skyBox.getSkyBoxEntity().setScale(100);
+            skyBox.getSkyBoxEntity().setScale(50);
             scene.setSkyBox(skyBox);
 
             camera.move(new Vector3f(0f, 0.1f, 0f));

@@ -53,14 +53,17 @@ public class Entity {
         position.x = x;
         position.y = y;
         position.z = z;
+        updateModelMatrix();
     }
 
     public void setRotation(float x, float y, float z, float angle) {
         this.rotation.fromAxisAngleRad(x, y, z, angle);
+        updateModelMatrix();
     }
 
     public void setScale(float scale) {
         this.scale = scale;
+        updateModelMatrix();
     }
 
     //NOTE Call after updates to pos, rot, scale
