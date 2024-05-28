@@ -3,6 +3,8 @@ package io.mindspice.mspice.engine.game;
 import io.mindspice.mspice.engine.core.PlayerState;
 import io.mindspice.mspice.engine.core.engine.Engine;
 import io.mindspice.mspice.engine.core.renderer.components.*;
+import io.mindspice.mspice.engine.core.renderer.lighting.AmbientLight;
+import io.mindspice.mspice.engine.core.renderer.lighting.DirectionalLight;
 import io.mindspice.mspice.engine.core.renderer.lighting.PointLight;
 import io.mindspice.mspice.engine.core.renderer.lighting.SpotLight;
 import io.mindspice.mspice.engine.core.window.Window;
@@ -73,7 +75,7 @@ public class Main {
         @Override
         public void init(Scene scene) {
             String quadModelId = "quad-model";
-            Model quadModel = ModelLoader.loadModel("quad-model", "/home/mindspice/code/Java/game/mspice-engine/src/main/resources/quad.obj",
+            Model quadModel = ModelLoader.loadModel("quad-model", "/home/mindspice/code/Java/game/mspice-engine/src/main/resources/terrain.obj",
                     scene.getTextureCache());
             scene.addModel(quadModel);
 
@@ -89,15 +91,22 @@ public class Main {
             }
 
             SceneLights sceneLights = new SceneLights();
-            sceneLights.getAmbientLight().setIntensity(0.2f);
+            AmbientLight ambientLight = sceneLights.getAmbientLight();
+            ambientLight.setIntensity(0.5f);
+            ambientLight.setColor(0.3f, 0.3f, 0.3f);
+
+            DirectionalLight dirLight = sceneLights.getDirLight();
+            dirLight.setPosition(0, 1, 0);
+            dirLight.setIntensity(1.0f);
             scene.setSceneLights(sceneLights);
+
 
             SkyBox skyBox = new SkyBox("/home/mindspice/code/Java/game/mspice-engine/src/main/resources/skybox.obj", scene.getTextureCache());
             skyBox.getSkyBoxEntity().setScale(50);
             scene.setSkyBox(skyBox);
 
             camera.move(new Vector3f(0f, 0.1f, 0f));
-
+            scene.setFog(new Fog(true, new Vector3f(0.6f, 0.4f, 0.5f), 0.95f));
             updateTerrain();
 
         }

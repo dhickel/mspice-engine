@@ -40,6 +40,9 @@ public class SceneRender {
     }
 
     public void render(Scene scene, Matrix4f viewMatrix) {
+        glEnable(GL_BLEND);
+        glBlendEquation(GL_FUNC_ADD);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         shaderProgram.bind();
 
         updateLights(scene, viewMatrix);
@@ -47,6 +50,11 @@ public class SceneRender {
         uniformsMap.setUniform("projectionMatrix", scene.getProjection().getProjMatrix());
         uniformsMap.setUniform("viewMatrix", viewMatrix);
         uniformsMap.setUniform("txtSampler", 0);
+
+        Fog fog = scene.getFog();
+        uniformsMap.setUniform("fog.activeFog", fog.isActive() ? 1 : 0);
+        uniformsMap.setUniform("fog.color", fog.getColor());
+        uniformsMap.setUniform("fog.density", fog.getDensity());
 
         Collection<Model> models = scene.getModelMap().values();
         TextureCache textureCache = scene.getTextureCache();
@@ -74,6 +82,7 @@ public class SceneRender {
 
         glBindVertexArray(0);
         shaderProgram.unbind();
+        glDisable(GL_BLEND);
     }
 
     private void createUniforms() {
@@ -113,6 +122,10 @@ public class SceneRender {
         uniformsMap.createUniform("dirLight.color");
         uniformsMap.createUniform("dirLight.direction");
         uniformsMap.createUniform("dirLight.intensity");
+
+        uniformsMap.createUniform("fog.activeFog");
+        uniformsMap.createUniform("fog.color");
+        uniformsMap.createUniform("fog.density");
     }
 
     private void updateLights(Scene scene, Matrix4f viewMatrix) {

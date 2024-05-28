@@ -9,16 +9,17 @@ import java.util.*;
 public class Scene implements CleanUp {
 
     private SkyBox skyBox;
-
     private Map<String, Model> modelMap;
     private Projection projection;
     private TextureCache textureCache;
     private SceneLights sceneLights;
+    private Fog fog;
 
     public Scene(int width, int height, float fov) {
         modelMap = new HashMap<>();
         projection = new Projection(width, height, fov);
         textureCache = new TextureCache();
+        fog = new Fog();
     }
 
     public void addEntity(Entity entity) {
@@ -69,5 +70,13 @@ public class Scene implements CleanUp {
 
     public void setSceneLights(SceneLights sceneLights) {
         this.sceneLights = sceneLights;
+    }
+
+    public Fog getFog() {
+        return fog;
+    }
+
+    public void setFog(Fog fog) {
+        this.fog = fog;
     }
 }
