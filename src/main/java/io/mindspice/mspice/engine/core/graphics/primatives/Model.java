@@ -4,6 +4,7 @@ import io.mindspice.mspice.engine.core.renderer.components.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 
 public class Model {
@@ -31,5 +32,14 @@ public class Model {
 
     public List<Material> getMaterialList() {
         return materialList;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Model.class.getSimpleName() + "[", "]")
+                .add("id='" + id + "'")
+                .add("entitiesList=" + entitiesList)
+                .add("materialList=" + materialList)
+                .toString();
     }
 }

@@ -4,6 +4,8 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import java.util.StringJoiner;
+
 
 public class Entity {
 
@@ -64,6 +66,18 @@ public class Entity {
     //NOTE Call after updates to pos, rot, scale
     public void updateModelMatrix() {
         modelMatrix.translationRotateScale(position, rotation, scale);
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Entity.class.getSimpleName() + "[", "]")
+                .add("id='" + id + "'")
+                .add("modelId='" + modelId + "'")
+                .add("modelMatrix=" + modelMatrix)
+                .add("position=" + position)
+                .add("rotation=" + rotation)
+                .add("scale=" + scale)
+                .toString();
     }
 }
 

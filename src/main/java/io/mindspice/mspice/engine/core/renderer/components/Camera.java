@@ -4,6 +4,7 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+
 public class Camera {
     private final Vector3f position;
     private final Matrix4f viewMatrix;
@@ -48,7 +49,7 @@ public class Camera {
         recalculate();
     }
 
-//    public void moveForward(float distance) {
+    //    public void moveForward(float distance) {
 //        move(0, 0, -distance);
 //    }
 //
@@ -64,9 +65,12 @@ public class Camera {
 //        move(-distance, 0, 0);
 //    }
 //
-//    public void moveUp(float distance) {
-//        move(0, distance, 0);
-//    }
+    public void moveUp(float inc) {
+        viewMatrix.positiveY(new Vector3f()).mul(inc);
+        position.add(new Vector3f());
+        recalculate();
+    }
+
 //
 //    public void moveDown(float distance) {
 //        move(0, -distance, 0);

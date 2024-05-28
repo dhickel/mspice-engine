@@ -4,6 +4,7 @@ import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 
 public class Material {
@@ -69,4 +70,15 @@ public class Material {
         this.specularColor = specularColor;
     }
 
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Material.class.getSimpleName() + "[", "]")
+                .add("meshList=" + meshList)
+                .add("texturePath='" + texturePath + "'")
+                .add("diffuseColor=" + diffuseColor)
+                .add("ambientColor=" + ambientColor)
+                .add("specularColor=" + specularColor)
+                .add("reflectance=" + reflectance)
+                .toString();
+    }
 }

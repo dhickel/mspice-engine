@@ -66,7 +66,7 @@ public class PlayerState implements OnUpdate, CleanUp {
 
     public void loadScene(Scene scene) {
         currScene = scene;
-        guiRenderer.loadScene(new LightGui(scene));
+      //  guiRenderer.loadScene(new LightGui(scene));
     }
 
     private void registerListeners() {
@@ -136,6 +136,10 @@ public class PlayerState implements OnUpdate, CleanUp {
 
     public Window getGameWindow() {
         return window;
+    }
+
+    public FpViewPort getViewport() {
+        return  viewport;
     }
 
     public class LightGui extends GuiScene {

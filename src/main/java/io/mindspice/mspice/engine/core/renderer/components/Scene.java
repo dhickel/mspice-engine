@@ -8,11 +8,12 @@ import java.util.*;
 
 public class Scene implements CleanUp {
 
+    private SkyBox skyBox;
+
     private Map<String, Model> modelMap;
     private Projection projection;
     private TextureCache textureCache;
     private SceneLights sceneLights;
-
 
     public Scene(int width, int height, float fov) {
         modelMap = new HashMap<>();
@@ -27,6 +28,14 @@ public class Scene implements CleanUp {
             throw new RuntimeException("Could not find model [" + modelId + "]");
         }
         model.getEntitiesList().add(entity);
+    }
+
+    public SkyBox getSkyBox() {
+        return skyBox;
+    }
+
+    public void setSkyBox(SkyBox skyBox) {
+        this.skyBox = skyBox;
     }
 
     public void addModel(Model model) {

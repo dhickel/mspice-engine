@@ -34,7 +34,10 @@ public class TextureCache {
         if (texture == null) {
             texture = textureMap.get(DEFAULT_TEXTURE);
         }
+
+
         return texture;
+
     }
 
 }

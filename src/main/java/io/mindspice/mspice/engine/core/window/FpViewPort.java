@@ -126,4 +126,8 @@ public class FpViewPort implements OnUpdate, InputListener {
         return camera.getViewMatrix();
     }
 
+    public Camera getCamera() {
+        return camera;
+    }
+
 }

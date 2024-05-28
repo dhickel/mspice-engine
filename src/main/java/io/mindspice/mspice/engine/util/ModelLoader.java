@@ -69,7 +69,6 @@ public class ModelLoader {
         if (!defaultMaterial.getMeshList().isEmpty()) {
             materialList.add(defaultMaterial);
         }
-
         return new Model(modelId, materialList);
 
     }
@@ -110,6 +109,7 @@ public class ModelLoader {
             Assimp.aiGetMaterialTexture(aiMaterial, Assimp.aiTextureType_DIFFUSE, 0, aiTexturePath, (IntBuffer) null,
                     null, null, null, null, null);
             String texturePath = aiTexturePath.dataString();
+
             if (texturePath != null && texturePath.length() > 0) {
                 material.setTexturePath(modelDir + File.separator + new File(texturePath).getName());
                 textureCache.createTexture(material.getTexturePath());

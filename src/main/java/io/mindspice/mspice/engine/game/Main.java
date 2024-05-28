@@ -2,14 +2,12 @@ package io.mindspice.mspice.engine.game;
 
 import io.mindspice.mspice.engine.core.PlayerState;
 import io.mindspice.mspice.engine.core.engine.Engine;
-import io.mindspice.mspice.engine.core.renderer.components.SceneLights;
+import io.mindspice.mspice.engine.core.renderer.components.*;
 import io.mindspice.mspice.engine.core.renderer.lighting.PointLight;
 import io.mindspice.mspice.engine.core.renderer.lighting.SpotLight;
 import io.mindspice.mspice.engine.core.window.Window;
 import io.mindspice.mspice.engine.core.engine.IGameLogic;
-import io.mindspice.mspice.engine.core.renderer.components.Entity;
 import io.mindspice.mspice.engine.core.graphics.primatives.Model;
-import io.mindspice.mspice.engine.core.renderer.components.Scene;
 import io.mindspice.mspice.engine.core.engine.GameEngine;
 
 import io.mindspice.mspice.engine.core.input.InputAction;
@@ -42,10 +40,14 @@ public class Main {
         ps.getInputMap().set(GLFW.GLFW_MOUSE_BUTTON_LEFT, InputAction.GUI_LEFT_CLICK);
         ps.getInputMap().set(GLFW.GLFW_MOUSE_BUTTON_RIGHT, InputAction.GUI_RIGHT_CLICK);
 
-        Logic logic = new Logic();
         Scene scene = new Scene(width, height, fov);
-        logic.init(scene);
+        Logic logic = new Logic();
+
+
+
         ps.loadScene(scene);
+        logic.setCamera(ps.getViewport().getCamera());
+        logic.init(scene);
         engine.init(ps, logic);
         engine.setFrameUPS(144);
         Engine.GET().init(engine);
@@ -57,28 +59,70 @@ public class Main {
     private static class Logic implements IGameLogic {
         private static Entity cubeEntity;
         private static float rotation;
+        private static final int NUM_CHUNKS = 40;
+
+        private Entity[][] terrainEntities;
+
+        private Camera camera;
+        private Scene scene;
+
+        public void setCamera(Camera camera) {
+            this.camera = camera;
+        }
 
         @Override
         public void init(Scene scene) {
-            Model cubeModel = ModelLoader.loadModel("cube-model", "/home/mindspice/code/Java/game/mspice-engine/src/main/resources/cube.obj",
+            String quadModelId = "quad-model";
+            Model quadModel = ModelLoader.loadModel("quad-model", "/home/mindspice/code/Java/game/mspice-engine/src/main/resources/quad.obj",
                     scene.getTextureCache());
-            scene.addModel(cubeModel);
+            scene.addModel(quadModel);
 
-            cubeEntity = new Entity("cube-entity", cubeModel.getId());
-            cubeEntity.setPosition(0, 0f, -2);
-            cubeEntity.updateModelMatrix();
-            scene.addEntity(cubeEntity);
+            int numRows = NUM_CHUNKS * 2 + 1;
+            int numCols = numRows;
+            terrainEntities = new Entity[numRows][numCols];
+            for (int j = 0; j < numRows; j++) {
+                for (int i = 0; i < numCols; i++) {
+                    Entity entity = new Entity("TERRAIN_" + j + "_" + i, quadModelId);
+                    terrainEntities[j][i] = entity;
+                    scene.addEntity(entity);
+                }
+            }
 
             SceneLights sceneLights = new SceneLights();
-            sceneLights.getAmbientLight().setIntensity(0.3f);
+            sceneLights.getAmbientLight().setIntensity(0.2f);
             scene.setSceneLights(sceneLights);
-            sceneLights.getPointLights().add(new PointLight(new Vector3f(1, 1, 1),
-                    new Vector3f(0, 0, -1.4f), 1.0f));
 
-            Vector3f coneDir = new Vector3f(0, 0, -1);
-            sceneLights.getSpotLights().add(new SpotLight(new PointLight(new Vector3f(1, 1, 1),
-                    new Vector3f(0, 0, -1.4f), 0.0f), coneDir, 140.0f));
+            SkyBox skyBox = new SkyBox("/home/mindspice/code/Java/game/mspice-engine/src/main/resources/skybox.obj", scene.getTextureCache());
+            skyBox.getSkyBoxEntity().setScale(100);
+            scene.setSkyBox(skyBox);
 
+            camera.move(new Vector3f(0f, 0.1f, 0f));
+
+            updateTerrain();
+
+        }
+
+        public void updateTerrain() {
+            int cellSize = 10;
+            Vector3f cameraPos = camera.getPosition();
+            int cellCol = (int) (cameraPos.x / cellSize);
+            int cellRow = (int) (cameraPos.z / cellSize);
+
+            int numRows = NUM_CHUNKS * 2 + 1;
+            int numCols = numRows;
+            int zOffset = -NUM_CHUNKS;
+            float scale = cellSize / 2.0f;
+            for (int j = 0; j < numRows; j++) {
+                int xOffset = -NUM_CHUNKS;
+                for (int i = 0; i < numCols; i++) {
+                    Entity entity = terrainEntities[j][i];
+                    entity.setScale(scale);
+                    entity.setPosition((cellCol + xOffset) * 2.0f, 0, (cellRow + zOffset) * 2.0f);
+                    entity.getModelMatrix().identity().scale(scale).translate(entity.getPosition());
+                    xOffset++;
+                }
+                zOffset++;
+            }
         }
 
         @Override
@@ -88,12 +132,7 @@ public class Main {
 
         @Override
         public void update(long delta) {
-            rotation += 0.25;
-            if (rotation > 360) {
-                rotation = 0;
-            }
-            cubeEntity.setRotation(1, 1, 1, (float) Math.toRadians(rotation));
-            cubeEntity.updateModelMatrix();
+            updateTerrain();
         }
 
         @Override

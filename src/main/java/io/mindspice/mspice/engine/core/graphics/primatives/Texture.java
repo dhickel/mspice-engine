@@ -3,6 +3,7 @@ package io.mindspice.mspice.engine.core.graphics.primatives;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.*;
+import java.util.StringJoiner;
 
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.stb.STBImage.*;
@@ -61,5 +62,13 @@ public class Texture {
 
     public String getTexturePath() {
         return texturePath;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Texture.class.getSimpleName() + "[", "]")
+                .add("textureId=" + textureId)
+                .add("texturePath='" + texturePath + "'")
+                .toString();
     }
 }
