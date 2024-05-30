@@ -230,6 +230,12 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>de.articdive</groupId>
+            <artifactId>jnoise-pipeline</artifactId>
+            <version>4.1.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>

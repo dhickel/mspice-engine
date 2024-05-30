@@ -11,6 +11,7 @@ public class Material {
     public static final Vector4f DEFAULT_COLOR = new Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
     private List<Mesh> meshList;
     private String texturePath;
+    private String normalMapPath;
     private Vector4f diffuseColor;
     private Vector4f ambientColor;
     private Vector4f specularColor;
@@ -20,6 +21,7 @@ public class Material {
         meshList = new ArrayList<>();
         diffuseColor = DEFAULT_COLOR;
         ambientColor = DEFAULT_COLOR;
+        specularColor = DEFAULT_COLOR;
     }
 
     public void cleanup() {
@@ -28,6 +30,10 @@ public class Material {
 
     public List<Mesh> getMeshList() {
         return meshList;
+    }
+
+    public void setMeshList(List<Mesh> meshList) {
+        this.meshList = meshList;
     }
 
     public String getTexturePath() {
@@ -68,6 +74,14 @@ public class Material {
 
     public void setSpecularColor(Vector4f specularColor) {
         this.specularColor = specularColor;
+    }
+
+    public String getNormalMapPath() {
+        return normalMapPath;
+    }
+
+    public void setNormalMapPath(String normalMapPath) {
+        this.normalMapPath = normalMapPath;
     }
 
     @Override

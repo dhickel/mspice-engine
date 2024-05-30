@@ -1,7 +1,13 @@
 package io.mindspice.mspice.engine.game;
 
+import de.articdive.jnoise.core.api.functions.Interpolation;
+import de.articdive.jnoise.generators.noise_parameters.fade_functions.FadeFunction;
+import de.articdive.jnoise.modules.octavation.fractal_functions.FractalFunction;
+import de.articdive.jnoise.pipeline.JNoise;
 import io.mindspice.mspice.engine.core.PlayerState;
 import io.mindspice.mspice.engine.core.engine.Engine;
+import io.mindspice.mspice.engine.core.graphics.primatives.Material;
+import io.mindspice.mspice.engine.core.graphics.primatives.Mesh;
 import io.mindspice.mspice.engine.core.renderer.components.*;
 import io.mindspice.mspice.engine.core.renderer.lighting.AmbientLight;
 import io.mindspice.mspice.engine.core.renderer.lighting.DirectionalLight;
@@ -13,14 +19,35 @@ import io.mindspice.mspice.engine.core.graphics.primatives.Model;
 import io.mindspice.mspice.engine.core.engine.GameEngine;
 
 import io.mindspice.mspice.engine.core.input.InputAction;
+import io.mindspice.mspice.engine.marchingcubes.FastNoiseLite;
+import io.mindspice.mspice.engine.marchingcubes.MCFactory;
+import io.mindspice.mspice.engine.marchingcubes.ScalarField;
 import io.mindspice.mspice.engine.util.ModelLoader;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.IOException;
+import java.util.List;
 
 
 public class Main {
+
+
+
+
+    public static class JNoiseScalarField implements ScalarField {
+        private JNoise noiseSource;
+
+        public JNoiseScalarField(JNoise noiseSource) {
+            this.noiseSource = noiseSource;
+        }
+
+        @Override
+        public float getDensity(float x, float y, float z) {
+            // Convert JNoise 3D noise output to density required by Marching Cubes
+            return (float) noiseSource.evaluateNoise(x, y, z);
+        }
+    }
 
     public static void main(String[] args) throws IOException {
         int width = 1920;
@@ -29,6 +56,11 @@ public class Main {
 
         GameEngine engine = GameEngine.getInstance();
         PlayerState ps = new PlayerState(width, height, fov);
+
+        System.out.println("generaing mesh");
+        Mesh mesh = MCFactory.generateMesh(2,2,2, new FastNoiseLite());
+        System.out.println("Finsihed mesh gen");
+
 
         ps.getInputMap().set(GLFW.GLFW_KEY_R, InputAction.RESIZE_WINDOW);
         ps.getInputMap().set(GLFW.GLFW_KEY_ESCAPE, InputAction.CLOSE_WINDOW);
@@ -44,6 +76,7 @@ public class Main {
 
         Scene scene = new Scene(width, height, fov);
         Logic logic = new Logic();
+        logic.setMesh(mesh);
 
 
 
@@ -56,7 +89,16 @@ public class Main {
         Engine.GET().addPlayerState(ps);
         //window.setVSyncEnabled(true);
 
+
+
     }
+
+
+
+
+
+
+
 
     private static class Logic implements IGameLogic {
         private static Entity cubeEntity;
@@ -67,71 +109,71 @@ public class Main {
 
         private Camera camera;
         private Scene scene;
+        private Mesh mesh;
 
         public void setCamera(Camera camera) {
             this.camera = camera;
         }
 
+        public void setMesh(Mesh mesh) {
+            this.mesh = mesh;
+        }
+
         @Override
         public void init(Scene scene) {
-            String quadModelId = "quad-model";
-            Model quadModel = ModelLoader.loadModel("quad-model", "/home/mindspice/code/Java/game/mspice-engine/src/main/resources/terrain.obj",
-                    scene.getTextureCache());
-            scene.addModel(quadModel);
+            System.out.println("Start Gen");
+//             JNoise noisePipeline=JNoise.newBuilder().perlin(3301, Interpolation.COSINE, FadeFunction.QUINTIC_POLY).octavate(4,1.0,1.0, FractalFunction.FBM,false).build();
+//            JNoiseScalarField scalarField = new JNoiseScalarField(noisePipeline);
+//
+            Vector3f origin = new Vector3f(0, 0, 0);
+            int size = 20;
+            float cubeSize = 0.1f;
 
-            int numRows = NUM_CHUNKS * 2 + 1;
-            int numCols = numRows;
-            terrainEntities = new Entity[numRows][numCols];
-            for (int j = 0; j < numRows; j++) {
-                for (int i = 0; i < numCols; i++) {
-                    Entity entity = new Entity("TERRAIN_" + j + "_" + i, quadModelId);
-                    terrainEntities[j][i] = entity;
-                    scene.addEntity(entity);
-                }
-            }
+            // Generate the mesh using the Marching Cubes algorithm
+            System.out.println();
+            Material mat = new Material();
+            mat.setMeshList(List.of(mesh));
+            Model model = new Model("test", List.of(mat));
+            scene.addModel(model);
+            System.out.println("Here");
 
             SceneLights sceneLights = new SceneLights();
-            AmbientLight ambientLight = sceneLights.getAmbientLight();
-            ambientLight.setIntensity(0.5f);
-            ambientLight.setColor(0.3f, 0.3f, 0.3f);
-
+            sceneLights.getAmbientLight().setIntensity(0.2f);
             DirectionalLight dirLight = sceneLights.getDirLight();
-            dirLight.setPosition(0, 1, 0);
+            dirLight.setPosition(1, 1, 0);
             dirLight.setIntensity(1.0f);
             scene.setSceneLights(sceneLights);
 
+            camera.moveUp(5.0f);
+            camera.adjustRotation((float) Math.toRadians(90), 0);
 
-            SkyBox skyBox = new SkyBox("/home/mindspice/code/Java/game/mspice-engine/src/main/resources/skybox.obj", scene.getTextureCache());
-            skyBox.getSkyBoxEntity().setScale(50);
-            scene.setSkyBox(skyBox);
-
-            camera.move(new Vector3f(0f, 0.1f, 0f));
-            scene.setFog(new Fog(true, new Vector3f(0.6f, 0.4f, 0.5f), 0.95f));
-            updateTerrain();
-
+            var lightAngle = -76;
+            double angRad = Math.toRadians(lightAngle);
+            dirLight.getDirection().x = (float) Math.sin(angRad);
+            dirLight.getDirection().y = (float) Math.cos(angRad);
         }
 
         public void updateTerrain() {
-            int cellSize = 10;
-            Vector3f cameraPos = camera.getPosition();
-            int cellCol = (int) (cameraPos.x / cellSize);
-            int cellRow = (int) (cameraPos.z / cellSize);
-
-            int numRows = NUM_CHUNKS * 2 + 1;
-            int numCols = numRows;
-            int zOffset = -NUM_CHUNKS;
-            float scale = cellSize / 2.0f;
-            for (int j = 0; j < numRows; j++) {
-                int xOffset = -NUM_CHUNKS;
-                for (int i = 0; i < numCols; i++) {
-                    Entity entity = terrainEntities[j][i];
-                    entity.setScale(scale);
-                    entity.setPosition((cellCol + xOffset) * 2.0f, 0, (cellRow + zOffset) * 2.0f);
-                    entity.getModelMatrix().identity().scale(scale).translate(entity.getPosition());
-                    xOffset++;
-                }
-                zOffset++;
-            }
+//            int cellSize = 10;
+//            Vector3f cameraPos = camera.getPosition();
+//            int cellCol = (int) (cameraPos.x / cellSize);
+//            int cellRow = (int) (cameraPos.z / cellSize);
+//
+//            int numRows = NUM_CHUNKS * 2 + 1;
+//            int numCols = numRows;
+//            int zOffset = -NUM_CHUNKS;
+//            float scale = cellSize / 2.0f;
+//            for (int j = 0; j < numRows; j++) {
+//                int xOffset = -NUM_CHUNKS;
+//                for (int i = 0; i < numCols; i++) {
+//                    Entity entity = terrainEntities[j][i];
+//                    entity.setScale(scale);
+//                    entity.setPosition((cellCol + xOffset) * 2.0f, 0, (cellRow + zOffset) * 2.0f);
+//                    entity.getModelMatrix().identity().scale(scale).translate(entity.getPosition());
+//                    xOffset++;
+//                }
+//                zOffset++;
+//            }
         }
 
         @Override
