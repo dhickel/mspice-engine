@@ -1,7 +1,7 @@
 package io.mindspice.mspice.engine.core.engine;
 
+import io.mindspice.mspice.engine.core.renderer.Scene;
 import io.mindspice.mspice.engine.core.window.Window;
-import io.mindspice.mspice.engine.core.renderer.components.Scene;
 
 
 public interface IGameLogic {

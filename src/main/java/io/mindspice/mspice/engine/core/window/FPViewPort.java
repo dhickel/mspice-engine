@@ -6,7 +6,7 @@ import io.mindspice.mspice.engine.core.input.InputAction;
 import io.mindspice.mspice.engine.core.input.InputManager;
 import io.mindspice.mspice.engine.core.input.KeyCallBackListener;
 import io.mindspice.mspice.engine.core.input.MouseCallBackListener;
-import io.mindspice.mspice.engine.core.renderer.components.Camera;
+import io.mindspice.mspice.engine.core.renderer.Camera;
 import io.mindspice.mspice.engine.core.input.ActionType;
 import org.joml.Math;
 import org.joml.Matrix4f;
@@ -16,7 +16,7 @@ import org.joml.Vector3f;
 import java.util.Arrays;
 
 
-public class FpViewPort implements OnUpdate, InputListener {
+public class FPViewPort implements OnUpdate, InputListener {
     private final Camera camera;
     private KeyCallBackListener keyListener;
     private final MouseCallBackListener mouseCallBackListener;
@@ -35,7 +35,7 @@ public class FpViewPort implements OnUpdate, InputListener {
 
     private final float moveSpeed = 0.005f;
 
-    public FpViewPort() {
+    public FPViewPort() {
         camera = new Camera();
         mouseCallBackListener = new MouseCallBackListener(ActionType.GAME_INPUT);
     }

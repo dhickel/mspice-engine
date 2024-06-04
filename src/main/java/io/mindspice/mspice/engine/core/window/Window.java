@@ -7,34 +7,27 @@ import io.mindspice.mspice.engine.core.input.InputManager;
 import io.mindspice.mspice.engine.core.input.ActionType;
 import io.mindspice.mspice.engine.core.input.InputAction;
 import io.mindspice.mspice.engine.core.input.KeyCallBackListener;
-import org.joml.Matrix4f;
 import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
+
 import org.lwjgl.system.MemoryUtil;
 
 import java.util.List;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.glfw.GLFWVulkan.glfwVulkanSupported;
 
 
 public class Window implements CleanUp, OnUpdate, InputListener {
 
     private final long windowHandle;
     private int height;
+    private boolean resized;
     private int width;
-    private boolean vSyncEnabled = false;
     private int[] winPosX = new int[1];
     private int[] winPosY = new int[1];
-
-    float fov = (float) Math.toRadians(90);
-    float zNear = 1f;
-    float zFar = 1000f;
-    float aspectRatio;
-    Matrix4f projectionMatrix;
+    private boolean vSyncEnabled = false;
 
     private KeyCallBackListener keyListener;
 
@@ -42,74 +35,34 @@ public class Window implements CleanUp, OnUpdate, InputListener {
         if (!glfwInit()) {
             throw new IllegalStateException("Unable to initialize GLFW");
         }
-        setHints(isCompatMode);
 
-        this.width = size[0];
-        this.height = size[1];
-        aspectRatio = (float) width / height;
-        windowHandle = glfwCreateWindow(width, height, title, MemoryUtil.NULL, MemoryUtil.NULL);
-        projectionMatrix = new Matrix4f();
-
-        if (windowHandle == NULL) {
-            throw new RuntimeException("Failed to create the GLFW window");
-
+        if (!glfwVulkanSupported()) {
+            throw new IllegalStateException("Cannot find a compatible Vulkan installable client driver (ICD)");
         }
+
         GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
         if (vidMode == null) {
-            throw new RuntimeException("Failed to get Video Mode");
-        }
+            throw new IllegalStateException("Failed to get video mode for primary monitor");
 
+        }
+        width = vidMode.width();
+        height = vidMode.height();
         winPosX[0] = (vidMode.width() - width) / 2;
         winPosY[0] = (vidMode.height() - height) / 2;
-        glfwSetWindowPos(windowHandle, winPosX[0], winPosY[0]);
 
-        setCallBacks();
-
-        GLFW.glfwMakeContextCurrent(windowHandle);
-        GL.createCapabilities();
-
-        GL11.glViewport(0, 0, width, height);
-        int[] fbWidth = new int[1];
-        int[] fbeHeight = new int[1];
-
-        GLFW.glfwGetFramebufferSize(windowHandle, fbWidth, fbeHeight);
-        glfwSwapInterval(0);
-        glfwShowWindow(windowHandle);
-        toggleCursor(false);
-    }
-
-    private void setHints(boolean isCompatMode) {
         glfwDefaultWindowHints();
-        glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
-        glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+        glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE);
 
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-
-        if (isCompatMode) {
-            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
-        } else {
-            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-            glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+        // Create the window
+        windowHandle = glfwCreateWindow(width, height, title, MemoryUtil.NULL, MemoryUtil.NULL);
+        if (windowHandle == MemoryUtil.NULL) {
+            throw new RuntimeException("Failed to create the GLFW window");
         }
+
+        glfwSetFramebufferSizeCallback(windowHandle, (window, w, h) -> resize(w, h));
     }
 
-    public void setCallBacks() {
-        glfwSetErrorCallback((int errorCode, long msgPtr) -> {
-            System.out.println(errorCode + "  " + MemoryUtil.memUTF8(msgPtr));
-        });
-        glfwSetWindowSizeCallback(windowHandle, (window, width, height) -> {
-            this.width = width;
-            this.height = height;
-        });
-        GLFW.glfwSetFramebufferSizeCallback(windowHandle, (window, width, height) -> {
-            this.width = width;
-            this.height = height;
-            GL11.glViewport(0, 0, width, height);
-            // TODO will want to update projection matrix as well
-        });
-    }
 
     public void toggleCursor(boolean toggleOn) {
         GLFW.glfwSetInputMode(windowHandle, GLFW.GLFW_CURSOR,
@@ -126,9 +79,7 @@ public class Window implements CleanUp, OnUpdate, InputListener {
         }
     }
 
-    public void setFOV(double fov) {
-        this.fov = (float) Math.toRadians(fov);
-    }
+
 
     @Override
     public void onUpdate(long delta) {
@@ -148,29 +99,8 @@ public class Window implements CleanUp, OnUpdate, InputListener {
         glfwFreeCallbacks(windowHandle);
         glfwDestroyWindow(windowHandle);
         glfwTerminate();
-
-        GLFWErrorCallback errorCB = glfwSetErrorCallback(null);
-        if (errorCB != null) {
-            errorCB.free();
-        }
-        GLFWWindowSizeCallback windowCB = glfwSetWindowSizeCallback(windowHandle, null);
-        if (windowCB != null) {
-            windowCB.free();
-        }
     }
 
-    public Matrix4f getProjectionMatrix() {
-        return projectionMatrix;
-    }
-
-    public Matrix4f updateProjectionMatrix() {
-        return projectionMatrix.setPerspective(fov, aspectRatio, zNear, zFar);
-    }
-
-    public Matrix4f updateProjectionMatrix(Matrix4f matrix, int width, int height) {
-        float aspect = (float) width / height;
-        return projectionMatrix.setPerspective(fov, aspect, zNear, zFar);
-    }
 
     public boolean isKeyPressed(int keyCode) {
         return glfwGetKey(windowHandle, keyCode) == GLFW_PRESS;
@@ -216,7 +146,8 @@ public class Window implements CleanUp, OnUpdate, InputListener {
         }
     }
 
-    protected void resized(int width, int height) {
+    protected void resize(int width, int height) {
+        resized = true;
         this.width = width;
         this.height = height;
     }

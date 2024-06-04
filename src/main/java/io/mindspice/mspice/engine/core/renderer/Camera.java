@@ -1,4 +1,4 @@
-package io.mindspice.mspice.engine.core.renderer.components;
+package io.mindspice.mspice.engine.core.renderer;
 
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
