@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class TextureCache {
 
-    public static final String DEFAULT_TEXTURE = "/home/mindspice/code/Java/game/mspice-engine/src/main/resources/default_texture.png";
+    public static final String DEFAULT_TEXTURE = "src/main/resources/default_texture.png";
 
     private Map<String, Texture> textureMap;
 
